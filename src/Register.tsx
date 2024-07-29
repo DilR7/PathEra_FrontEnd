@@ -5,9 +5,65 @@ import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
 
 function Register() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [cpassword, setCpassword] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [cpasswordError, setCpasswordError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let hasError = false;
+
+    if (!name) {
+      setNameError("Name is required");
+      hasError = true;
+    } else {
+      setNameError("");
+    }
+
+    if (!email) {
+      setEmailError("Email is required");
+      hasError = true;
+    } else if (!email.includes("@gmail.com")) {
+      setEmailError("Email must contain @gmail.com");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      hasError = true;
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+    } else {
+      setPasswordError("");
+    }
+
+    if (!cpassword) {
+      setCpasswordError("Confirm Password is required");
+      hasError = true;
+    } else if (!cpassword.match(password)) {
+      setCpasswordError("Confirm password must be the same as password");
+      hasError = true;
+    } else {
+      setCpasswordError("");
+    }
+
+    if (hasError) {
+      return;
+    }
+  };
+
+  const hasErrors = nameError || emailError || passwordError || cpasswordError;
   return (
     <div
-      className="flex md:flex-row justify-center md:justify-between items-center h-screen overflow-y-hidden "
+      className="flex md:flex-row justify-center  mt-1 md:justify-between items-center h-screen"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
       <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
@@ -149,12 +205,16 @@ function Register() {
           />
         </svg>
       </div>
-      <div className="w-full md:w-1/2 text-center p-8 md:p-36">
+      <div
+        className={`w-full md:w-1/2 text-center p-8 md:p-36 ${
+          hasErrors ? "mt-20" : ""
+        }`}
+      >
         <h2 className="text-xl font-bold mb-2">Register</h2>
         <h3 className="text-sm font-medium mb-4">
           Enter your details to get register in to your account
         </h3>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="name"
@@ -162,22 +222,28 @@ function Register() {
             >
               Name
             </label>
-            <Input className="mt-1" />
-            {/* <input
-              type="text"
-              id="name"
-              name="name"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            /> */}
+            <Input className="mt-1" onChange={(e) => setName(e.target.value)} />
+            {nameError && (
+              <p className="text-red-500 text-xs mt-2 text-left">{nameError}</p>
+            )}
           </div>
           <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 text-left"
             >
-              Email/Phone
+              Email
             </label>
-            <Input className="mt-1" type="email" />
+            <Input
+              className="mt-1"
+              type="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {emailError && (
+              <p className="text-red-500 text-xs mt-2 text-left">
+                {emailError}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -186,7 +252,16 @@ function Register() {
             >
               Password
             </label>
-            <Input className="mt-1" type="password" />
+            <Input
+              className="mt-1"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {passwordError && (
+              <p className="text-red-500 text-xs mt-2 text-left">
+                {passwordError}
+              </p>
+            )}
           </div>
           <div>
             <label
@@ -195,7 +270,16 @@ function Register() {
             >
               Confirm Password
             </label>
-            <Input className="mt-1" type="password" />
+            <Input
+              className="mt-1"
+              type="password"
+              onChange={(e) => setCpassword(e.target.value)}
+            />
+            {cpasswordError && (
+              <p className="text-red-500 text-xs mt-2 text-left">
+                {cpasswordError}
+              </p>
+            )}
           </div>
           <div>
             <Button type="submit" className="w-full">

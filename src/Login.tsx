@@ -6,6 +6,41 @@ import { Input } from "./components/ui/input";
 import { Checkbox } from "./components/ui/checkbox";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let hasError = false;
+
+    if (!email) {
+      setEmailError("Email is required");
+      hasError = true;
+    } else if (!email.includes("@gmail.com")) {
+      setEmailError("Email must contains @gmail.com");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      hasError = true;
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+      hasError = true;
+    } else {
+      setPasswordError("");
+    }
+
+    if (hasError) {
+      return;
+    }
+  };
+
   return (
     <div
       className="flex md:flex-row justify-center md:justify-between items-center h-screen overflow-y-hidden "
@@ -141,15 +176,27 @@ function Login() {
         <h3 className="text-sm font-normal mb-4">
           Enter your details to sign in to your account
         </h3>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 text-left"
             >
-              Email/Phone
+              Email
             </label>
-            <Input id="email" name="email" type="text" className="mt-1" />
+            <Input
+              id="email"
+              name="email"
+              type="text"
+              className="mt-1"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {emailError && (
+              <p className="text-red-500 text-xs mt-2 text-left">
+                {emailError}
+              </p>
+            )}
+
             {/* <input
               type="text"
               id="email"
@@ -169,7 +216,13 @@ function Login() {
               name="password"
               type="password"
               className="mt-1"
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {passwordError && (
+              <p className="text-red-500 text-xs mt-2 text-left">
+                {passwordError}
+              </p>
+            )}
             {/* <input
               type="text"
               id="password"
@@ -215,7 +268,7 @@ function Login() {
             </Link>
           </p>
           <p className="text-sm text-gray-600 font-medium">
-            <a href="#" className="text-sky-600 hover:text-sky-500">
+            <a href="#" className="text-primary hover:text-sky-500">
               Forgot Password?
             </a>
           </p>
