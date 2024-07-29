@@ -63,7 +63,7 @@ function Register() {
   const hasErrors = nameError || emailError || passwordError || cpasswordError;
   return (
     <div
-      className="flex md:flex-row justify-center  mt-1 md:justify-between items-center h-screen"
+      className="flex md:flex-row justify-center md:justify-between items-center h-screen"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
       <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
@@ -205,11 +205,7 @@ function Register() {
           />
         </svg>
       </div>
-      <div
-        className={`w-full md:w-1/2 text-center p-8 md:p-36 ${
-          hasErrors ? "mt-20" : ""
-        }`}
-      >
+      <div className={`w-full md:w-1/2 text-center sm:px-16 sm:py-8 p-8`}>
         <h2 className="text-xl font-bold mb-2">Register</h2>
         <h3 className="text-sm font-medium mb-4">
           Enter your details to get register in to your account
@@ -224,7 +220,7 @@ function Register() {
             </label>
             <Input className="mt-1" onChange={(e) => setName(e.target.value)} />
             {nameError && (
-              <p className="text-red-500 text-xs mt-2 text-left">{nameError}</p>
+              <p className="text-red-500 text-sm mt-2 text-left">{nameError}</p>
             )}
           </div>
           <div>
@@ -240,7 +236,7 @@ function Register() {
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailError && (
-              <p className="text-red-500 text-xs mt-2 text-left">
+              <p className="text-red-500 text-sm mt-2 text-left">
                 {emailError}
               </p>
             )}
@@ -258,7 +254,7 @@ function Register() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {passwordError && (
-              <p className="text-red-500 text-xs mt-2 text-left">
+              <p className="text-red-500 text-sm mt-2 text-left">
                 {passwordError}
               </p>
             )}
@@ -276,7 +272,7 @@ function Register() {
               onChange={(e) => setCpassword(e.target.value)}
             />
             {cpasswordError && (
-              <p className="text-red-500 text-xs mt-2 text-left">
+              <p className="text-red-500 text-sm mt-2 text-left">
                 {cpasswordError}
               </p>
             )}

@@ -171,7 +171,7 @@ function Login() {
           />
         </svg>
       </div>
-      <div className="w-full md:w-1/2 text-center p-8 md:p-36">
+      <div className="w-full md:w-1/2 text-center sm:p-16 p-8 lg:p-24">
         <h2 className="text-xl font-bold mb-2">Login</h2>
         <h3 className="text-sm font-normal mb-4">
           Enter your details to sign in to your account
@@ -192,7 +192,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
             {emailError && (
-              <p className="text-red-500 text-xs mt-2 text-left">
+              <p className="text-red-500 text-sm mt-2 text-left">
                 {emailError}
               </p>
             )}
@@ -219,7 +219,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
             {passwordError && (
-              <p className="text-red-500 text-xs mt-2 text-left">
+              <p className="text-red-500 text-sm mt-2 text-left">
                 {passwordError}
               </p>
             )}
