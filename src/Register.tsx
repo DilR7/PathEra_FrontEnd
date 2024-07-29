@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
+import { Input } from "./components/ui/input";
+import { Button } from "./components/ui/button";
 
 function Register() {
   return (
@@ -160,12 +162,13 @@ function Register() {
             >
               Name
             </label>
-            <input
+            <Input className="mt-1" />
+            {/* <input
               type="text"
               id="name"
               name="name"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            /> */}
           </div>
           <div>
             <label
@@ -174,12 +177,7 @@ function Register() {
             >
               Email/Phone
             </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            <Input className="mt-1" type="email" />
           </div>
           <div>
             <label
@@ -188,12 +186,7 @@ function Register() {
             >
               Password
             </label>
-            <input
-              type="text"
-              id="password"
-              name="password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            <Input className="mt-1" type="password" />
           </div>
           <div>
             <label
@@ -202,26 +195,21 @@ function Register() {
             >
               Confirm Password
             </label>
-            <input
-              type="text"
-              id="cpassword"
-              name="cpassword"
-              className="mt-1 mb-6 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            <Input className="mt-1" type="password" />
           </div>
           <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
-            >
+            <Button type="submit" className="w-full">
               Register
-            </button>
+            </Button>
           </div>
         </form>
         <div className="pt-4">
           <p className="text-sm text-gray-600 font-semibold">
             Been Here Before?{" "}
-            <Link to="/login" className="text-sky-600 hover:text-sky-500">
+            <Link
+              to="/login"
+              className="text-primary hover:underline-offset-2 hover:underline"
+            >
               Login
             </Link>
           </p>

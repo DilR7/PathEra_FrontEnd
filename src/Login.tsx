@@ -1,6 +1,9 @@
 import { useState } from "react";
 import "./index.css";
 import { Link } from "react-router-dom";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
+import { Checkbox } from "./components/ui/checkbox";
 
 function Login() {
   return (
@@ -146,12 +149,13 @@ function Login() {
             >
               Email/Phone
             </label>
-            <input
+            <Input id="email" name="email" type="text" className="mt-1" />
+            {/* <input
               type="text"
               id="email"
               name="email"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            /> */}
           </div>
           <div>
             <label
@@ -160,20 +164,27 @@ function Login() {
             >
               Password
             </label>
-            <input
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              className="mt-1"
+            />
+            {/* <input
               type="text"
               id="password"
               name="password"
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            />
+            /> */}
           </div>
           <div className="flex items-center">
-            <input
+            {/* <input
               type="checkbox"
               id="remember-me"
               name="remember-me"
               className="h-4 w-4 text-sky-600 border-gray-300 rounded"
-            />
+            /> */}
+            <Checkbox />
             <label
               htmlFor="remember-me"
               className="ml-2 block text-sm text-gray-900"
@@ -182,18 +193,24 @@ function Login() {
             </label>
           </div>
           <div>
-            <button
+            <Button type="submit" className="w-full">
+              Sign In
+            </Button>
+            {/* <button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
             >
               Sign In
-            </button>
+            </button> */}
           </div>
         </form>
         <div className="pt-4">
           <p className="text-sm text-gray-600 font-semibold">
             Don’t have an account?{" "}
-            <Link to="/register" className="text-sky-600 hover:text-sky-500">
+            <Link
+              to="/register"
+              className="text-primary hover:underline-offset-2 hover:underline"
+            >
               Sign Up
             </Link>
           </p>
