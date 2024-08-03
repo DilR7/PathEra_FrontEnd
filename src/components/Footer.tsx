@@ -1,5 +1,6 @@
 import React from "react";
 import InstagramIcon from "../assets/instagram__icon.png";
+import { Input } from "./ui/input";
 
 const Footer: React.FC = () => {
   return (
@@ -14,19 +15,29 @@ const Footer: React.FC = () => {
               <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
               <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
             </div>
-            <p className="mt-5 text-sm">&copy; 2024 PathEra. All rights reserved</p>
+            <p className="mt-5 text-sm">
+              &copy; 2024 PathEra. All rights reserved
+            </p>
           </div>
           <div className="flex flex-col lg:flex-col gap-8">
             <div className="flex flex-col lg:flex-row gap-6">
-              <a href="#" className="text-sm hover:text-gray-600">Home</a>
-              <a href="#" className="text-sm hover:text-gray-600">Jobs</a>
-              <a href="#" className="text-sm hover:text-gray-600">CV Grading</a>
-              <a href="#" className="text-sm hover:text-gray-600">Interview Simulation</a>
+              <a href="#" className="text-sm hover:text-gray-600">
+                Home
+              </a>
+              <a href="#" className="text-sm hover:text-gray-600">
+                Jobs
+              </a>
+              <a href="#" className="text-sm hover:text-gray-600">
+                CV Grading
+              </a>
+              <a href="#" className="text-sm hover:text-gray-600">
+                Interview Simulation
+              </a>
             </div>
             <div className="mt-5  lg:mt-0 border-2 flex rounded-full border-black overflow-hidden">
               <input
                 placeholder="Enter your email"
-                className="p-2 flex-grow outline-none text-sm"
+                className="py-2 px-4 flex-grow outline-none text-sm"
               />
               <button className="bg-black text-white p-3 rounded-full text-xs px-7">
                 Contact Us

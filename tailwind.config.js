@@ -17,10 +17,10 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
       colors: {
-        fontFamily: {
-          poppins: ["Poppins", "sans-serif"],
-        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

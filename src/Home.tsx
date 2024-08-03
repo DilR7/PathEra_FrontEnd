@@ -81,7 +81,7 @@ const cardsData = [
 
 const Home = () => {
   return (
-    <div style={{ fontFamily: "Poppins, sans-serif" }}>
+    <div>
       <Header />
       <div className="pt-10 flex flex-col md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
         <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
@@ -92,15 +92,13 @@ const Home = () => {
           />
         </div>
 
-        <div className="w-full md:w-1/2 text-center sm:p-16 p-8 lg:p-2">
+        <div className="w-full flex flex-col items-center md:w-1/2 text-center sm:p-16 p-8 lg:p-2">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Unleash Your Career With{" "}
             <span className="text-sky-50">PathEra</span>
           </h1>
-          <Button
-            type="submit"
-            className="w-full md:w-60 mt-6 bg-black text-white py-2 px-4 rounded"
-          >
+          <img src={HeroImage} className="w-3/4 h-auto md:hidden" alt="Hero" />
+          <Button className="w-full text-lg md:w-60 mt-6" variant={"black"}>
             Join Us
           </Button>
         </div>
@@ -154,7 +152,7 @@ const Home = () => {
             <h1 className="text-xl font-bold mb-2">
               Receive immediate, professional comments on your resume.
             </h1>
-            <Button type="submit" className="w-60 mt-6 bg-black">
+            <Button type="submit" className="w-60 mt-6" variant={"black"}>
               Join Us
             </Button>
           </div>
@@ -172,7 +170,7 @@ const Home = () => {
             <h1 className="text-xl font-bold mb-2">
               Preparing for interview? Use our AI simulate interviews
             </h1>
-            <Button type="submit" className="w-60 mt-6 bg-black">
+            <Button type="submit" className="w-60 mt-6" variant={"black"}>
               Try It Now!
             </Button>
           </div>
