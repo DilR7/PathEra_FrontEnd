@@ -6,10 +6,10 @@ const Header: React.FC = () => {
 
   return (
     <nav
-      className="absolute top-0 left-0 right-0 z-10 "
+      className="absolute top-0 left-0 right-0 z-10 bg-primary"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
             <a
@@ -26,13 +26,13 @@ const Header: React.FC = () => {
             } lg:block`}
           >
             <a
-              href="/"
+              href="/home"
               className="text-primary-foreground font-semibold hover:text-gray-700"
             >
               Home
             </a>
             <a
-              href="/jobs"
+              href="/jobrecommendation"
               className="text-primary-foreground font-medium hover:text-gray-700"
             >
               Jobs

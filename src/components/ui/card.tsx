@@ -6,21 +6,20 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  date: string;
-  color: string;
+  imageSrc: string;
+  company: string;
+  applicants: number;
+  role: string;
 }
 
 interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  company: string;
-  role: string;
-  imageSrc: string;
   tags: string[];
-  color: string;
+  description: string;
 }
 
 interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   rate: string;
-  location: string;
+  postedDate: string;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
@@ -28,7 +27,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
     <div
       ref={ref}
       className={cn(
-        "border bg-card text-card-foreground shadow-sm max-w-sm mx-auto p-3 rounded-lg",
+        "bg-white text-gray-900 shadow-sm mx-auto p-5 w-72 rounded-lg",
         className
       )}
       {...props}
@@ -38,7 +37,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ date, color, className, ...props }, ref) => {
+  ({ role, imageSrc, company, applicants, className, ...props }, ref) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     const handleWishlistClick = () => {
@@ -47,20 +46,29 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
     return (
       <div
         ref={ref}
-        className={cn(
-          "flex justify-between items-center p-4 rounded-t-lg",
-          className,
-          color
-        )}
+        className={cn("flex justify-between items-center mb-2", className)}
         {...props}
       >
-        <span className="text-xs font-medium text-black border-2 bg-white rounded-3xl border-transparent p-2 px-5">
-          {date}
-        </span>
+        <div className="flex items-center">
+          <img
+            src={imageSrc}
+            alt={`${company} logo`}
+            className="w-10 h-10 rounded-lg mr-2 p-2 bg-gray-100"
+          />
+
+          <div className="">
+            <h4 className="text-sm font-semibold">{role}</h4>
+            <span className=" text-sm text-gray-500">{company}</span>
+            <span className="text-sm text-gray-500">
+              {applicants} Applicants
+            </span>
+          </div>
+        </div>
         <button
           onClick={handleWishlistClick}
-          style={{ fontSize: "2rem" }}
-          className={`text-xl ${isWishlisted ? "text-red-500" : "text-gray-600"}`}
+          className={`text-xl ${
+            isWishlisted ? "text-red-500" : "text-gray-600"
+          }`}
         >
           {isWishlisted ? <FaHeart /> : <FaRegHeart />}
         </button>
@@ -71,53 +79,53 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 CardHeader.displayName = "CardHeader";
 
 const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
-  ({ company, role, imageSrc, tags, color, className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(" px-4 pb-4 rounded-b-lg", className, color)}
-      {...props}
-    >
-      <div className="flex items-center space-x-2">
-        <span className="text-sm font-semibold">{company}</span>
-      </div>
-      <div className="mt-2">
-        <div className="flex justify-between">
-          <h4 className="text-2xl font-semibold w-3/4">{role}</h4>
-          <img
-            src={imageSrc}
-            className="w-12 h-12 rounded-full border-transparent bg-white p-2"
-          />
+  ({ tags, description, className, ...props }, ref) => {
+    const tagStyles = [
+      { bg: "bg-purple-200", text: "text-purple-900" },
+      { bg: "bg-green-200", text: "text-green-900" },
+      { bg: "bg-orange-200", text: "text-orange-900" },
+    ];
+
+    return (
+      <div ref={ref} className={cn("mb-4", className)} {...props}>
+        <div className="flex flex-wrap gap-2 mb-2 mt-4">
+          {tags.map((tag, index) => {
+            const { bg, text } = tagStyles[index] || { bg: "bg-gray-200", text: "text-gray-700" };
+
+            return (
+              <span
+                key={index}
+                className={cn(
+                  bg,
+                  text,
+                  "px-3 py-1 rounded-lg text-xs font-semibold"
+                )}
+              >
+                {tag}
+              </span>
+            );
+          })}
         </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag, index) => (
-            <span
-              key={index}
-              className="border border-black px-3 py-1 rounded-full text-gray-800 hover:bg-white duration-150 ease-out"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="text-gray-600 mt-4">{description}</p>
       </div>
-    </div>
-  )
+    );
+  }
 );
 CardContent.displayName = "CardContent";
 
+
 const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
-  ({ rate, location, className, ...props }, ref) => (
+  ({ rate, postedDate, className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("flex justify-between items-center mt-4", className)}
+      className={cn(
+        "flex justify-between items-center mt-4 pt-4 border-t",
+        className
+      )}
       {...props}
     >
-      <div className="flex justify-center text-start flex-col">
-        <span className="text-sm font-bold">{rate}</span>
-        <span className="text-sm text-gray-600">{location}</span>
-      </div>
-      <button className="bg-black text-white px-4 py-2 rounded-full">
-        Details
-      </button>
+      <div className="flex text-lg font-semibold">{rate}<h1 className="text-gray-500 font-medium">/hr</h1></div>
+      <div className="text-xs text-gray-500">Posted {postedDate}</div>
     </div>
   )
 );

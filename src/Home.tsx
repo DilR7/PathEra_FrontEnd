@@ -10,74 +10,11 @@ import {
   CardContent,
   CardFooter,
 } from "./components/ui/card";
-import amazonLogo from "./assets/amazon__icon.png";
+import { LIST_JOBS } from "./data/listJob";
 import cvGrading from "./assets/CvGrading__Image.png";
 import AiInterview from "./assets/AiInterview__Image.png";
 import Footer from "./components/Footer";
 import ProfilePicture from "./assets/profile__picture.jpg";
-
-const cardsData = [
-  {
-    date: "20 Aug, 2004",
-    company: "Amazon",
-    role: "Senior UI/UX Designer",
-    imageSrc: amazonLogo,
-    tags: ["Part time", "Senior Level", "Distant", "Project work"],
-    rate: "$50/hr",
-    location: "Remote",
-    color: "bg-teal-200",
-  },
-  {
-    date: "20 Aug, 2004",
-    company: "Google",
-    role: "Software Engineer",
-    imageSrc: amazonLogo,
-    tags: ["Full time", "Mid Level", "Onsite", "Permanent"],
-    rate: "$70/hr",
-    location: "Mountain View",
-    color: "bg-yellow-200",
-  },
-  {
-    date: "20 Aug, 2004",
-    company: "Facebook",
-    role: "Product Manager",
-    imageSrc: amazonLogo,
-    tags: ["Full time", "Senior Level", "Onsite", "Permanent"],
-    rate: "$60/hr",
-    location: "Menlo Park",
-    color: "bg-blue-200",
-  },
-  {
-    date: "20 Aug, 2004",
-    company: "Amazon",
-    role: "Senior UI/UX Designer",
-    imageSrc: amazonLogo,
-    tags: ["Part time", "Senior Level", "Distant", "Project work"],
-    rate: "$50/hr",
-    location: "Remote",
-    color: "bg-gray-200",
-  },
-  {
-    date: "20 Aug, 2004",
-    company: "Google",
-    role: "Software Engineer",
-    imageSrc: amazonLogo,
-    tags: ["Full time", "Mid Level", "Onsite", "Permanent"],
-    rate: "$70/hr",
-    location: "Mountain View",
-    color: "bg-red-200",
-  },
-  {
-    date: "20 Aug, 2004",
-    company: "Facebook",
-    role: "Product Manager",
-    imageSrc: amazonLogo,
-    tags: ["Full time", "Senior Level", "Onsite", "Permanent"],
-    rate: "$60/hr",
-    location: "Menlo Park",
-    color: "bg-green-200",
-  },
-];
 
 const Home = () => {
   return (
@@ -114,26 +51,31 @@ const Home = () => {
         <StatisticsCard title="Companies" value="50+" />
       </div>
 
-      <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-white mb-20">
+      <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-mariner-50 mb-20">
         <h1 className="pb-5 font-bold text-3xl pt-5 md:pt-5 lg:pt-5">
           Latest Featured <span className="text-primary">Jobs</span>
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-          {cardsData.map((card, index) => (
-            <Card key={index}>
-              <CardHeader date={card.date} color={card.color} />
-              <CardContent
-                company={card.company}
-                role={card.role}
-                imageSrc={card.imageSrc}
-                tags={card.tags}
-                color={card.color}
-              />
-              <CardFooter rate={card.rate} location={card.location} />
-            </Card>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+      {LIST_JOBS.map((job, index) => (
+        <Card key={index}>
+          <CardHeader
+            imageSrc={job.imageSrc}
+            company={job.company}
+            applicants={job.applicants}
+            role={job.role}
+          />
+          <CardContent
+            tags={job.tags}
+          
+          />
+          <CardFooter
+            rate={job.rate}
+            postedDate={job.postedDate}
+          />
+        </Card>
+      ))}
+    </div>
 
         <div className="mt-4 font-medium text-xl">Show More</div>
       </div>
