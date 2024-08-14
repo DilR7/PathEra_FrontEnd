@@ -1,6 +1,5 @@
 import React from "react";
 import { RiFilterLine } from "react-icons/ri";
-import VerticalUnderline from "./VerticalUnderline";
 
 interface JobFilterProps {
   filters: string[];

@@ -2,13 +2,16 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { SlLocationPin } from "react-icons/sl";
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  to: string;
+}
 
 interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   imageSrc: string;
-  company: string;
-  applicants: number;
+  location: string;
   role: string;
 }
 
@@ -23,21 +26,23 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        "bg-white text-gray-900 shadow-sm mx-auto p-5 w-72 rounded-lg",
-        className
-      )}
-      {...props}
-    />
+  ({ className, to, ...props }, ref) => (
+    <Link to={to}>
+      <div
+        ref={ref}
+        className={cn(
+          "bg-white text-gray-900 shadow-sm mx-auto p-5 w-72 rounded-lg hover:shadow-lg transition-shadow duration-200",
+          className
+        )}
+        {...props}
+      />
+    </Link>
   )
 );
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ role, imageSrc, company, applicants, className, ...props }, ref) => {
+  ({ role, imageSrc, location, className, ...props }, ref) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     const handleWishlistClick = () => {
@@ -52,16 +57,18 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
         <div className="flex items-center">
           <img
             src={imageSrc}
-            alt={`${company} logo`}
+            alt={`${location} logo`}
             className="w-10 h-10 rounded-lg mr-2 p-2 bg-gray-100"
           />
 
           <div className="">
             <h4 className="text-sm font-semibold">{role}</h4>
-            <span className=" text-sm text-gray-500">{company}</span>
-            <span className="text-sm text-gray-500">
-              {applicants} Applicants
-            </span>
+            <div className="flex items-center gap-1">
+              <span>
+                <SlLocationPin />
+              </span>
+              <span className=" text-sm text-gray-500">{location}</span>
+            </div>
           </div>
         </div>
         <button
@@ -90,7 +97,10 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
       <div ref={ref} className={cn("mb-4", className)} {...props}>
         <div className="flex flex-wrap gap-2 mb-2 mt-4">
           {tags.map((tag, index) => {
-            const { bg, text } = tagStyles[index] || { bg: "bg-gray-200", text: "text-gray-700" };
+            const { bg, text } = tagStyles[index] || {
+              bg: "bg-gray-200",
+              text: "text-gray-700",
+            };
 
             return (
               <span
@@ -113,7 +123,6 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
 );
 CardContent.displayName = "CardContent";
 
-
 const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ rate, postedDate, className, ...props }, ref) => (
     <div
@@ -124,7 +133,10 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
       )}
       {...props}
     >
-      <div className="flex text-lg font-semibold">{rate}<h1 className="text-gray-500 font-medium">/hr</h1></div>
+      <div className="flex text-lg font-semibold">
+        {rate}
+        <h1 className="text-gray-500 font-medium">/hr</h1>
+      </div>
       <div className="text-xs text-gray-500">Posted {postedDate}</div>
     </div>
   )

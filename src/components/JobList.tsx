@@ -19,14 +19,13 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
           </button>
         </div>
         {jobs.map((job, index) => (
-          <Card key={index}>
+          <Card key={index} to={`/jobDetail`}>
             <CardHeader
               imageSrc={job.imageSrc}
-              company={job.company}
-              applicants={job.applicants}
+              location={job.location}
               role={job.role}
             />
-            <CardContent tags={job.tags} />
+            <CardContent tags={job.tags} description="" />
             <CardFooter rate={job.rate} postedDate={job.postedDate} />
           </Card>
         ))}

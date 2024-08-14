@@ -1,78 +1,78 @@
 import React from "react";
+import amazonLogo from "..//assets/amazon__icon.png";
+import { FaHeart, FaRegHeart, FaExternalLinkAlt } from "react-icons/fa";
+import { useState } from "react";
 
 const JobDescription: React.FC = () => {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const handleWishlistClick = () => {
+    setIsWishlisted((prevState) => !prevState);
+  };
+
   return (
-    <div className="w-2/3 p-5">
-      <div className="flex items-center">
-        <img
-          src="path_to_amazon_logo"
-          alt="Amazon"
-          className="w-12 h-12 mr-4"
-        />
+    <div className="p-5">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold">Senior UI/UX Designer</h1>
+        <div className="flex mb-2 gap-4">
+          <button className="bg-mariner-800 text-white px-4 py-2 rounded-xl font-semibold flex items-center gap-3">
+            <p>Apply Now</p>
+            <div className="text-xs">
+              <FaExternalLinkAlt />
+            </div>
+          </button>
+          <button
+            onClick={handleWishlistClick}
+            className={`text-xl border-2 border-gray rounded-xl px-2 ${
+              isWishlisted
+                ? "text-red-700 bg-red-300 border-red-300"
+                : "text-gray-600"
+            }`}
+          >
+            {isWishlisted ? <FaHeart /> : <FaRegHeart />}
+          </button>
+        </div>
+      </div>
+      <div className="flex items-center mb-6">
+        <img src={amazonLogo} alt="Twitter" className="w-12 h-12 ml-2 mr-6" />
         <div>
-          <h1 className="text-2xl font-bold">Senior UI/UX Designer</h1>
-          <h2 className="text-xl">Amazon, Inc</h2>
-          <p>San Francisco, CA</p>
-        </div>
-        <div className="ml-auto flex space-x-4">
-          <button className="bg-blue-500 text-white px-4 py-2 rounded">
-            Save
-          </button>
-          <button className="bg-green-500 text-white px-4 py-2 rounded">
-            Apply
-          </button>
-          <button className="bg-red-500 text-white px-4 py-2 rounded">
-            Report this job
-          </button>
+          <h2 className="text-lg text-gray-600">Twitter, Inc</h2>
+          <p className="text-sm text-gray-500">Bandung, Indonesia</p>
         </div>
       </div>
-      <div className="mt-8">
-        <h3 className="text-xl font-bold">Job Description</h3>
-        <p className="mt-2">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit...
+
+      <div className="mb-6">
+        <h3 className="text-lg font-bold">Job Overview</h3>
+        <p className="text-sm text-gray-600 mt-2">
+          We are searching for a driven Expert Senior UI Designer to join our
+          growing team at Twitter in Tangerang.
         </p>
-        <h3 className="text-xl font-bold mt-4">Skills Required</h3>
-        <p className="mt-2">You have 40% match with the skills required</p>
-        <ul className="list-disc ml-5">
-          <li>Eric Kontol</li>
-          <li>Eric Cibal</li>
-          <li>Eric Anjing</li>
-          <li>Eric Tai</li>
-          <li>Eric Bangsat</li>
-        </ul>
-        <h3 className="text-xl font-bold mt-4">Qualifications</h3>
-        <ul className="list-disc ml-5">
-          <li>Ganteng</li>
-          <li>Pintar</li>
-          <li>Kaya</li>
-          <li>Punya relasi</li>
-          <li>Punya rumah 20 lantai</li>
-        </ul>
       </div>
-      <div className="mt-8 grid grid-cols-2 gap-4">
-        <div className="flex flex-col items-start">
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
           <p className="font-bold">Work Level</p>
-          <p>Senior</p>
+          <p className="text-gray-600">Senior</p>
         </div>
-        <div className="flex flex-col items-start">
+        <div>
           <p className="font-bold">Job Type</p>
-          <p>Part-time</p>
+          <p className="text-gray-600">Full-Time</p>
         </div>
-        <div className="flex flex-col items-start">
+        <div>
           <p className="font-bold">Role</p>
-          <p>Design</p>
+          <p className="text-gray-600">Design</p>
         </div>
-        <div className="flex flex-col items-start">
-          <p className="font-bold">Degree</p>
-          <p>Bachelors</p>
-        </div>
-        <div className="flex flex-col items-start">
+        <div>
           <p className="font-bold">Experience</p>
-          <p>3 years</p>
+          <p className="text-gray-600">2 Years</p>
         </div>
-        <div className="flex flex-col items-start">
-          <p className="font-bold">Office</p>
-          <p>Hybrid</p>
+        <div>
+          <p className="font-bold">Work Model</p>
+          <p className="text-gray-600">On-Site</p>
+        </div>
+        <div>
+          <p className="font-bold">Salary</p>
+          <p className="text-gray-600">$8,000/mo</p>
         </div>
       </div>
     </div>
