@@ -4,16 +4,20 @@ import Header from "./components/Header";
 import JobSidebar from "./components/JobSidebar";
 import JobDescription from "./components/JobDescription";
 
-
 const JobDetail: React.FC = () => {
   return (
-    <div className="pt-1 flex flex-col gap-3 items-center min-h-screen px-14 bg-white mb-20">
+    <div className="min-h-screen flex flex-col mt-24">
       <Header />
-      
-      <div className="flex mt-24">
-        <JobSidebar />
-        <JobDescription />
+
+      <div className="flex flex-grow bg-gray-100">
+        <div className="pr-8 w-full bg-white p-5">
+          <JobDescription />
+        </div>
+        <div className="pl-8 bg-white p-5">
+          <JobSidebar />
+        </div>
       </div>
+
       <Footer />
     </div>
   );
