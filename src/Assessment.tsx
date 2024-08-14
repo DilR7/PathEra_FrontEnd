@@ -225,7 +225,10 @@ const Assessment: React.FC = () => {
                 <div
                   key={title}
                   className="flex justify-between mt-2 bg-white w-full text-black py-1 px-3 rounded-sm cursor-pointer items-center"
-                  style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
+                  style={{
+                    overflowWrap: "break-word",
+                    wordBreak: "break-word",
+                  }}
                 >
                   {title}
                   <span
@@ -240,14 +243,14 @@ const Assessment: React.FC = () => {
             <button
               type="button"
               onClick={handleAddExperience}
-              className=" mt-2 border-2 text-white w-full py-2 px-4 rounded hover:bg-white hover:text-primary"
+              className=" mt-2 border-2 text-white w-full py-2 px-4 rounded hover:bg-white hover:text-primary transition-all duration-300"
             >
               Add a new experience
             </button>
           </div>
           <button
             type="submit"
-            className="w-full bg-white hover:bg-blue-600 text-primary py-2 px-4 rounded hover:text-white"
+            className="w-full bg-white text-primary py-2 px-4 rounded hover:bg-white/80 transition-all duration-300"
           >
             Submit Job Questionnaire
           </button>

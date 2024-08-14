@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "./components/Header";
 import HeroImage from "./assets/Hero__image.png";
 import { Button } from "./components/ui/button";
@@ -57,25 +56,19 @@ const Home = () => {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-      {LIST_JOBS.map((job, index) => (
-        <Card key={index}>
-          <CardHeader
-            imageSrc={job.imageSrc}
-            company={job.company}
-            applicants={job.applicants}
-            role={job.role}
-          />
-          <CardContent
-            tags={job.tags}
-          
-          />
-          <CardFooter
-            rate={job.rate}
-            postedDate={job.postedDate}
-          />
-        </Card>
-      ))}
-    </div>
+          {LIST_JOBS.map((job, index) => (
+            <Card key={index}>
+              <CardHeader
+                imageSrc={job.imageSrc}
+                company={job.company}
+                applicants={job.applicants}
+                role={job.role}
+              />
+              <CardContent tags={job.tags} />
+              <CardFooter rate={job.rate} postedDate={job.postedDate} />
+            </Card>
+          ))}
+        </div>
 
         <div className="mt-4 font-medium text-xl">Show More</div>
       </div>

@@ -4,40 +4,41 @@ import { Link } from "react-router-dom";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Checkbox } from "./components/ui/checkbox";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "./context/UserContext";
+
+type LoginError = {
+  email?: string;
+  password?: string;
+};
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState<LoginError>({});
+  const navigate = useNavigate();
+  const [user, fetchUser] = useUser();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    let hasError = false;
-
-    if (!email) {
-      setEmailError("Email is required");
-      hasError = true;
-    } else if (!email.includes("@gmail.com")) {
-      setEmailError("Email must contains @gmail.com");
-      hasError = true;
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      setPasswordError("Password is required");
-      hasError = true;
-    } else if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
-      hasError = true;
-    } else {
-      setPasswordError("");
-    }
-
-    if (hasError) {
-      return;
+    try {
+      const result = await axios.post(
+        "http://localhost:5005/login",
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true }
+      );
+      if (result.status === 200) {
+        localStorage.setItem("token", result.data.token);
+        fetchUser();
+        navigate("/home");
+      }
+    } catch (error: any) {
+      console.log(error.response.data);
+      setError(error.response.data.errors);
     }
   };
 
@@ -191,18 +192,11 @@ function Login() {
               className="mt-1"
               onChange={(e) => setEmail(e.target.value)}
             />
-            {emailError && (
+            {error.email && (
               <p className="text-red-500 text-sm mt-2 text-left">
-                {emailError}
+                {error.email}
               </p>
             )}
-
-            {/* <input
-              type="text"
-              id="email"
-              name="email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            /> */}
           </div>
           <div>
             <label
@@ -218,25 +212,13 @@ function Login() {
               className="mt-1"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && (
+            {error.password && (
               <p className="text-red-500 text-sm mt-2 text-left">
-                {passwordError}
+                {error.password}
               </p>
             )}
-            {/* <input
-              type="text"
-              id="password"
-              name="password"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sky-500 focus:border-sky-600 sm:text-sm"
-            /> */}
           </div>
           <div className="flex items-center">
-            {/* <input
-              type="checkbox"
-              id="remember-me"
-              name="remember-me"
-              className="h-4 w-4 text-sky-600 border-gray-300 rounded"
-            /> */}
             <Checkbox />
             <label
               htmlFor="remember-me"

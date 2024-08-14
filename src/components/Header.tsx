@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProfileIcon from "../assets/profile__icon.png";
+import { useUser } from "@/context/UserContext";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, fetchUser] = useUser();
 
   return (
     <nav

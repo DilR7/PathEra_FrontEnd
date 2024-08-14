@@ -1,71 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./index.css";
 import { Input } from "./components/ui/input";
 import { Button } from "./components/ui/button";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./index.css";
+
+type ErrorRegister = {
+  name?: string;
+  email?: string;
+  password?: string;
+  cpassword?: string;
+};
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpassword, setCpassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [cpasswordError, setCpasswordError] = useState("");
+  const [error, setError] = useState<ErrorRegister>({});
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    let hasError = false;
-
-    if (!name) {
-      setNameError("Name is required");
-      hasError = true;
-    } else {
-      setNameError("");
-    }
-
-    if (!email) {
-      setEmailError("Email is required");
-      hasError = true;
-    } else if (!email.includes("@gmail.com")) {
-      setEmailError("Email must contain @gmail.com");
-      hasError = true;
-    } else {
-      setEmailError("");
-    }
-
-    if (!password) {
-      setPasswordError("Password is required");
-      hasError = true;
-    } else if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
-    } else {
-      setPasswordError("");
-    }
-
-    if (!cpassword) {
-      setCpasswordError("Confirm Password is required");
-      hasError = true;
-    } else if (!cpassword.match(password)) {
-      setCpasswordError("Confirm password must be the same as password");
-      hasError = true;
-    } else {
-      setCpasswordError("");
-    }
-
-    if (hasError) {
-      return;
+    try {
+      const result = await axios.post(`http://localhost:5005/register`, {
+        name: name,
+        email: email,
+        password: password,
+        confirm_password: cpassword,
+      });
+      if (result.status === 201) {
+        navigate("/login");
+      }
+    } catch (error: any) {
+      setError(error.response.data.errors);
     }
   };
 
-  const hasErrors = nameError || emailError || passwordError || cpasswordError;
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
+
   return (
-    <div
-      className="flex md:flex-row justify-center md:justify-between items-center h-screen"
-      style={{ fontFamily: "Poppins, sans-serif" }}
-    >
+    <div className="flex md:flex-row justify-center md:justify-between items-center h-screen">
       <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -205,12 +183,12 @@ function Register() {
           />
         </svg>
       </div>
-      <div className={`w-full md:w-1/2 text-center sm:px-16 sm:py-8 p-8`}>
+      <div className={`w-full md:w-1/2 text-center sm:px-16 sm:py-0`}>
         <h2 className="text-xl font-bold mb-2">Register</h2>
         <h3 className="text-sm font-medium mb-4">
           Enter your details to get register in to your account
         </h3>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-3" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="name"
@@ -219,8 +197,10 @@ function Register() {
               Name
             </label>
             <Input className="mt-1" onChange={(e) => setName(e.target.value)} />
-            {nameError && (
-              <p className="text-red-500 text-sm mt-2 text-left">{nameError}</p>
+            {error.name && (
+              <p className="text-red-500 text-sm mt-1 text-left">
+                {error.name}
+              </p>
             )}
           </div>
           <div>
@@ -232,12 +212,12 @@ function Register() {
             </label>
             <Input
               className="mt-1"
-              type="email"
+              type="text"
               onChange={(e) => setEmail(e.target.value)}
             />
-            {emailError && (
-              <p className="text-red-500 text-sm mt-2 text-left">
-                {emailError}
+            {error.email && (
+              <p className="text-red-500 text-sm mt-1 text-left">
+                {error.email}
               </p>
             )}
           </div>
@@ -253,9 +233,9 @@ function Register() {
               type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && (
-              <p className="text-red-500 text-sm mt-2 text-left">
-                {passwordError}
+            {error.password && (
+              <p className="text-red-500 text-sm mt-1 text-left">
+                {error.password}
               </p>
             )}
           </div>
@@ -271,9 +251,9 @@ function Register() {
               type="password"
               onChange={(e) => setCpassword(e.target.value)}
             />
-            {cpasswordError && (
-              <p className="text-red-500 text-sm mt-2 text-left">
-                {cpasswordError}
+            {error.cpassword && (
+              <p className="text-red-500 text-sm mt-1 text-left">
+                {error.cpassword}
               </p>
             )}
           </div>
