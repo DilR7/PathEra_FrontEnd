@@ -3,16 +3,22 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { SlLocationPin } from "react-icons/sl";
+import { useJob } from "@/context/JobContextType";
+import { PiDotOutlineFill } from "react-icons/pi";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   to: string;
+  role: string;
+  location: string;
+  company: string;
+  tags: string[];
 }
 
 interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   imageSrc: string;
   location: string;
   role: string;
+  company: string;
 }
 
 interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,23 +32,29 @@ interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, to, ...props }, ref) => (
-    <Link to={to}>
-      <div
-        ref={ref}
-        className={cn(
-          "bg-white text-gray-900 shadow-sm mx-auto p-5 w-72 rounded-lg hover:shadow-lg transition-shadow duration-200",
-          className
-        )}
-        {...props}
-      />
-    </Link>
-  )
+  ({ className, company, location, role, tags, ...props }, ref) => {
+    const { setJobDetails } = useJob();
+    const handleClick = () => {
+      setJobDetails({ role, company, location, tags });
+    };
+    return (
+      <Link to="/jobdetail" onClick={handleClick}>
+        <div
+          ref={ref}
+          className={cn(
+            "bg-white text-gray-900 shadow-sm mx-auto p-3 w-72 rounded-lg hover:shadow-lg transition-shadow duration-200",
+            className
+          )}
+          {...props}
+        />
+      </Link>
+    );
+  }
 );
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
-  ({ role, imageSrc, location, className, ...props }, ref) => {
+  ({ role, imageSrc, location, company, className, ...props }, ref) => {
     const [isWishlisted, setIsWishlisted] = useState(false);
 
     const handleWishlistClick = () => {
@@ -63,9 +75,10 @@ const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 
           <div className="">
             <h4 className="text-sm font-semibold">{role}</h4>
-            <div className="flex items-center gap-1">
-              <span>
-                <SlLocationPin />
+            <div className="flex items-center">
+              <span className=" text-sm text-gray-500">{company}</span>
+              <span className="text-gray-500">
+                <PiDotOutlineFill />
               </span>
               <span className=" text-sm text-gray-500">{location}</span>
             </div>
@@ -128,7 +141,7 @@ const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
     <div
       ref={ref}
       className={cn(
-        "flex justify-between items-center mt-4 pt-4 border-t",
+        "flex justify-between items-center pt-2 border-t",
         className
       )}
       {...props}

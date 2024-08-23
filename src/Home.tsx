@@ -61,10 +61,9 @@ const Home = () => {
               <CardHeader
                 imageSrc={job.imageSrc}
                 company={job.company}
-                applicants={job.applicants}
                 role={job.role}
               />
-              <CardContent tags={job.tags} />
+              <CardContent tags={job.tags}   />
               <CardFooter rate={job.rate} postedDate={job.postedDate} />
             </Card>
           ))}

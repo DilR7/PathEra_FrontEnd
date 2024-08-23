@@ -25,17 +25,18 @@ const JobSidebar: React.FC = () => {
 
   return (
     <div>
-      <p className="mb-2">Similar Jobs</p>
+      <p className="mb-2 font-barlow font-semibold text-lg">Similar Jobs</p>
       {shuffledJobCards.map((job, index) => (
-        <Card key={index} className="mb-4 shadow-lg">
-          <CardHeader
-            imageSrc={job.imageSrc}
-            role={job.role}
-          />
-          <CardContent
-            tags={job.tags}
-            description=""
-          />
+        <Card
+          key={index}
+          role={job.role}
+          location={job.location}
+          company={job.company}
+          tags={job.tags}
+          className="mb-4 shadow-lg"
+        >
+          <CardHeader imageSrc={job.imageSrc} role={job.role} location={job.location} company={job.company}/>
+          <CardContent tags={job.tags} description="" />
           <CardFooter rate={job.rate} postedDate={job.postedDate} />
         </Card>
       ))}
