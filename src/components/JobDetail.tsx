@@ -7,6 +7,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { PiDotOutlineFill } from "react-icons/pi";
 import { FaCircleCheck } from "react-icons/fa6";
 import { AiFillCloseCircle } from "react-icons/ai";
+import LoadingIcon from "./LoadingIcon";
 
 const JobDetail: React.FC = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -79,19 +80,22 @@ const JobDetail: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className=" bg-white p-4 rounded-lg mb-3 flex flex-col">
         <h1 className="text-xl font-bold">Skills Required</h1>
-        <p className="text-green-500 text-xs">
+        <p className="text-green-500 text-sm">
           You have 40% match with the skills required
         </p>
         <div className="grid grid-cols-5 mt-2 gap-3 text-sm">
           <div className="border-2 border-green-200 rounded-2xl flex items-center gap-2 px-1">
-            <p className="text-green-600"><FaCircleCheck /></p>
+            <p className="text-green-600">
+              <FaCircleCheck />
+            </p>
             Leo Cantik
           </div>
           <div className="border-2 border-red-200 rounded-2xl flex items-center gap-2 px-1">
-            <p className="text-red-600"><AiFillCloseCircle /></p>
+            <p className="text-red-600">
+              <AiFillCloseCircle />
+            </p>
             Leo Gay
           </div>
         </div>

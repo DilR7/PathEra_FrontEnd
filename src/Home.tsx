@@ -19,7 +19,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <div className="pt-10 flex flex-col md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
+      <div className="pt-20 flex flex-col md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
         <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
           <img
             src={HeroImage}
@@ -63,7 +63,7 @@ const Home = () => {
                 company={job.company}
                 role={job.role}
               />
-              <CardContent tags={job.tags}   />
+              <CardContent tags={job.tags} />
               <CardFooter rate={job.rate} postedDate={job.postedDate} />
             </Card>
           ))}

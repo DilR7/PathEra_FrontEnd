@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import ProfileIcon from "../assets/profile__icon.png";
 import { useUser } from "@/context/UserContext";
+import { Link } from "react-router-dom";
+import { User } from "lucide-react";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, fetchUser] = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => console.log(user), [user]);
 
   return (
     <nav
@@ -14,12 +21,12 @@ const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
-            <a
-              href="/jobs"
+            <Link
+              to="/jobs"
               className="text-primary-foreground font-bold text-2xl hover:text-gray-700"
             >
               PathEra
-            </a>
+            </Link>
           </div>
 
           <div
@@ -27,37 +34,52 @@ const Header: React.FC = () => {
               menuOpen ? "hidden" : "hidden"
             } lg:block`}
           >
-            <a
-              href="/home"
+            <Link
+              to="/home"
               className="text-primary-foreground font-semibold hover:text-gray-700"
             >
               Home
-            </a>
-            <a
-              href="/jobrecommendation"
+            </Link>
+            <Link
+              to="/jobrecommendation"
               className="text-primary-foreground font-medium hover:text-gray-700"
             >
               Jobs
-            </a>
-            <a
-              href="/jobs"
+            </Link>
+            <Link
+              to="/jobs"
               className="text-primary-foreground hover:text-gray-700"
             >
               CV Grading
-            </a>
-            <a
-              href="/jobs"
+            </Link>
+            <Link
+              to="/jobs"
               className="text-primary-foreground hover:text-gray-700"
             >
               Interview Simulation
-            </a>
+            </Link>
           </div>
           <div className="flex items-center">
-            <img
+            {/* <img
               className="h-8 w-auto hidden lg:block"
               src={ProfileIcon}
               alt="Profile Icon"
-            />
+            /> */}
+            {!user && (
+              <Button
+                onClick={() => navigate("/login")}
+                className="hidden lg:inline-flex border border-white rounded-full"
+              >
+                <User />
+                <span className="ml-2 text-lg">Login</span>
+              </Button>
+            )}
+            {user && (
+              <Button className="hidden lg:inline-flex border border-white rounded-full">
+                <User />
+                <span className="ml-2 text-lg">Profile</span>
+              </Button>
+            )}
             <div className="lg:hidden">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
@@ -95,29 +117,32 @@ const Header: React.FC = () => {
             }`}
           >
             <div className="px-4 sm:px-6 lg:px-14 pt-2 pb-3 space-y-1">
-              <a href="/" className="block text-gray-900 hover:text-gray-700">
+              <Link
+                to="/home"
+                className="block text-gray-900 hover:text-gray-700"
+              >
                 Home
-              </a>
-              <a
-                href="/jobs"
+              </Link>
+              <Link
+                to="/jobs"
                 className="block text-gray-900 hover:text-gray-700"
               >
                 Jobs
-              </a>
-              <a
-                href="/jobs"
+              </Link>
+              <Link
+                to="/jobs"
                 className="block text-gray-900 hover:text-gray-700"
               >
                 CV Grading
-              </a>
-              <a
-                href="/jobs"
+              </Link>
+              <Link
+                to="/jobs"
                 className="block text-gray-900 hover:text-gray-700"
               >
                 Interview Simulation
-              </a>
-              <a
-                href="/profile"
+              </Link>
+              <Link
+                to="/profile"
                 className="block text-gray-900 hover:text-gray-700"
               >
                 Profile
@@ -126,7 +151,7 @@ const Header: React.FC = () => {
                   src={ProfileIcon}
                   alt="Profile Icon"
                 />
-              </a>
+              </Link>
             </div>
           </div>
         </>
