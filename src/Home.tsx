@@ -1,4 +1,3 @@
-import Header from "./components/Header";
 import HeroImage from "./assets/Hero__image.png";
 import { Button } from "./components/ui/button";
 import StatisticsCard from "./components/StatisticsCard";
@@ -12,14 +11,12 @@ import {
 import { LIST_JOBS } from "./data/listJob";
 import cvGrading from "./assets/CvGrading__Image.png";
 import AiInterview from "./assets/AiInterview__Image.png";
-import Footer from "./components/Footer";
-import ProfilePicture from "./assets/profile__picture.jpg";
+import MainLayout from "./layout/MainLayout";
 
 const Home = () => {
   return (
-    <div>
-      <Header />
-      <div className="pt-20 flex flex-col md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
+    <MainLayout>
+      <div className="flex flex-col-reverse md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
         <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
           <img
             src={HeroImage}
@@ -111,7 +108,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="flex flex-col justify-center items-center min-h-screen px-4 sm:px-8 md:px-14 bg-primary">
+      {/* <div className="flex flex-col justify-center items-center min-h-screen px-4 sm:px-8 md:px-14 bg-primary">
         <div className="flex flex-col md:flex-row w-full justify-center md:justify-between items-center">
           <div className="w-full md:w-1/2 flex flex-col justify-evenly text-start p-4 sm:p-8 lg:p-12">
             <p className="text-lg sm:text-xl font-bold mb-2">Review</p>
@@ -136,10 +133,8 @@ const Home = () => {
             alt="Profile"
           />
         </div>
-      </div>
-
-      <Footer />
-    </div>
+      </div> */}
+    </MainLayout>
   );
 };
 

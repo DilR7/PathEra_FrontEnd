@@ -7,6 +7,7 @@ import { Checkbox } from "./components/ui/checkbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
+import { BASE_URL } from "./config/settings";
 
 type LoginError = {
   email?: string;
@@ -24,7 +25,7 @@ function Login() {
     e.preventDefault();
     try {
       const result = await axios.post(
-        "http://localhost:5005/login",
+        `${BASE_URL}/login`,
         {
           email: email,
           password: password,

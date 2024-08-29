@@ -1,82 +1,118 @@
 import React, { useState, useEffect } from "react";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
+import MainLayout from "./layout/MainLayout";
 import JobFilter from "./components/JobFilter";
 import JobList from "./components/JobList";
-import { LIST_JOBS } from "./data/listJob";
+import axios from "axios";
+import { BASE_URL } from "./config/settings";
+import { JobType } from "./types/JobTypes";
+
+type FilterType = {
+  jobModel: string[];
+  jobType: string[];
+  jobLevel: string[];
+};
 
 const JobRecommendation: React.FC = () => {
-  const [filters, setFilters] = useState<string[]>([]);
-  const [filteredJobs, setFilteredJobs] = useState(LIST_JOBS);
+  const [filters, setFilters] = useState<FilterType>({
+    jobModel: [],
+    jobType: [],
+    jobLevel: [],
+  });
+  const [allJobs, setAllJobs] = useState<JobType[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<JobType[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleFilterChange = (filter: string) => {
-    setFilters((prevFilters) =>
-      prevFilters.includes(filter)
-        ? prevFilters.filter((f) => f !== filter)
-        : [...prevFilters, filter]
-    );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/jobs`);
+        setAllJobs(response.data);
+        setFilteredJobs(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleFilterChange = (
+    filterCategory: keyof FilterType,
+    filterValue: string
+  ) => {
+    setFilters((prevFilters) => {
+      const updatedCategory = prevFilters[filterCategory].includes(filterValue)
+        ? prevFilters[filterCategory].filter((value) => value !== filterValue)
+        : [...prevFilters[filterCategory], filterValue];
+      return { ...prevFilters, [filterCategory]: updatedCategory };
+    });
   };
 
   const handleClearAll = () => {
-    setFilters([]);
+    setFilters({
+      jobModel: [],
+      jobType: [],
+      jobLevel: [],
+    });
+    setFilteredJobs(allJobs); // Reset filtered jobs when all filters are cleared
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
+  const applyFilters = () => {
+    const filtered = allJobs.filter((job) => {
+      const matchesSearchQuery = job.job_title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const matchesFilters =
+        (filters.jobModel.length === 0 ||
+          filters.jobModel.includes(job.job_model)) &&
+        (filters.jobType.length === 0 ||
+          filters.jobType.includes(job.job_type)) &&
+        (filters.jobLevel.length === 0 ||
+          filters.jobLevel.includes(job.job_level));
+
+      return matchesSearchQuery && matchesFilters;
+    });
+
+    setFilteredJobs(filtered);
+  };
+
   const handleSearch = () => {
-    if (searchQuery.trim() === "") {
-      setFilteredJobs(LIST_JOBS);
-    } else {
-      setFilteredJobs(
-        LIST_JOBS.filter((job) =>
-          job.role.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
-    }
+    applyFilters();
   };
 
   useEffect(() => {
-    if (filters.length === 0) {
-      setFilteredJobs(LIST_JOBS);
-    } else {
-      setFilteredJobs(
-        LIST_JOBS.filter((job) =>
-          filters.some((filter) => job.tags.includes(filter))
-        )
-      );
-    }
-  }, [filters]);
+    applyFilters(); // Apply filters when they change
+  }, [filters, searchQuery]);
 
   return (
-    <div className="">
-      <Header />
-
-      <div className="mt-24">
-        <div className="mb-4 flex justify-between px-8">
-          <input
-            placeholder="Find Job"
-            className="py-2 px-4 outline-none text-sm border-2  rounded-full"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-          <button className="border-0 py-2 px-4 rounded-full bg-mariner-700 text-mariner-100" onClick={handleSearch}>
-            Find Job
-          </button>
-        </div>
-        <div className="flex flex-row lg:flex-row w-full border-t-2 border-mariner-300">
-          <JobFilter
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            onClearAll={handleClearAll}
-          />
-          <JobList jobs={filteredJobs} />
-        </div>
+    <MainLayout>
+      {/* <div className="mb-4 flex justify-between px-8 mt-24">
+        <input
+          placeholder="Find Job"
+          className="py-2 px-4 outline-none text-sm border-2 rounded-full"
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
+        <button
+          className="border-0 py-2 px-4 rounded-full bg-mariner-700 text-mariner-100"
+          onClick={handleSearch}
+        >
+          Find Job
+        </button>
+      </div> */}
+      <div className="flex flex-col md:flex-row w-full border-t-2 border-mariner-300">
+        <JobFilter
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          onClearAll={handleClearAll}
+        />
+        {filteredJobs && <JobList jobs={filteredJobs} />}
       </div>
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

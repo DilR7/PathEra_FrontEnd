@@ -15,7 +15,7 @@ const Header: React.FC = () => {
 
   return (
     <nav
-      className="absolute top-0 left-0 right-0 z-10 bg-primary"
+      className="fixed top-0 left-0 right-0 z-10 bg-primary mb-20"
       style={{ fontFamily: "Poppins, sans-serif" }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,11 +60,6 @@ const Header: React.FC = () => {
             </Link>
           </div>
           <div className="flex items-center">
-            {/* <img
-              className="h-8 w-auto hidden lg:block"
-              src={ProfileIcon}
-              alt="Profile Icon"
-            /> */}
             {!user && (
               <Button
                 onClick={() => navigate("/login")}

@@ -15,7 +15,7 @@ export const LIST_JOBS: JobCard[] = [
     date: "20 Aug, 2004",
     role: "Senior UI/UX Designer",
     imageSrc: amazonLogo,
-    tags: ["Hybrid", "Part-time", "Internship"],
+    tags: ["Hybrid", "Part-time", "Intern"],
     description:
       "Doing the right thing for investors is what we’re all about at Vanguard, and that in...",
     rate: "$50",
@@ -38,7 +38,7 @@ export const LIST_JOBS: JobCard[] = [
   {
     date: "20 Aug, 2004",
     role: "Product Manager",
-    imageSrc: amazonLogo,
+    imageSrc: "https://i.ibb.co.com/s9fGTZR/image.png",
     tags: ["On-site", "Internship", "Director"],
     description:
       "Doing the right thing for investors is what we’re all about at Vanguard, and that in...",

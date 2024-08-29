@@ -4,7 +4,10 @@ import { Input } from "./ui/input";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full" style={{ fontFamily: "Poppins, sans-serif" }}>
+    <footer
+      className="w-full border-t-2 border-mariner-300"
+      style={{ fontFamily: "Poppins, sans-serif" }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14 py-6">
         <div className="flex flex-col lg:flex-row justify-between gap-8">
           <div className="flex flex-col">
