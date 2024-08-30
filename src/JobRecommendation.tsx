@@ -60,10 +60,6 @@ const JobRecommendation: React.FC = () => {
     setFilteredJobs(allJobs);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
   const applyFilters = () => {
     const filtered = allJobs.filter((job) => {
       const matchesSearchQuery = job.job_title
@@ -84,23 +80,21 @@ const JobRecommendation: React.FC = () => {
     setFilteredJobs(filtered);
   };
 
-  const handleSearch = () => {
-    applyFilters();
-  };
-
   useEffect(() => {
     applyFilters();
   }, [filters, searchQuery]);
 
   return (
     <MainLayout>
-      <div className="flex flex-col md:flex-row w-full border-t-2 border-mariner-300">
+      <div className="flex flex-col md:flex-row w-full border-t-2 border-mariner-300 md:h-screen">
         <JobFilter
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearAll={handleClearAll}
         />
-        <JobList jobs={filteredJobs} loading={loading} />
+        <div className="flex-1 md:overflow-y-auto">
+          <JobList jobs={filteredJobs} loading={loading} />
+        </div>
       </div>
     </MainLayout>
   );

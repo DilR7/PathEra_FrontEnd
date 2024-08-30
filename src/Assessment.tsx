@@ -30,6 +30,8 @@ const Assessment: React.FC = () => {
   const [experience, setExperience] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionComplete, setSubmissionComplete] = useState<boolean>(false);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
   const navigate = useNavigate();
 
   const handleInputChangeJobTitles = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,22 +113,44 @@ const Assessment: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmissionComplete(false);
+
+    const controller = new AbortController();
+    setAbortController(controller);
+
     try {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      console.log("Data:", {
-        selectedJobTitles,
-        experience,
-        selectedSkills,
-        degree,
-        selectedExperiences,
-      });
+      // await axios.post(
+      //   `${BASE_URL}/submit`,
+      //   {
+      //     selectedJobTitles,
+      //     experience,
+      //     selectedSkills,
+      //     degree,
+      //     selectedExperiences,
+      //   },
+      //   {
+      //     signal: controller.signal,
+      //   }
+      // );
+
       setSubmissionComplete(true);
     } catch (error) {
-      console.error("Submission error:", error);
+      if (axios.isCancel(error)) {
+        console.log("Submission canceled");
+      } else {
+        console.error("Submission error:", error);
+      }
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCancel = () => {
+    if (abortController) {
+      abortController.abort();
+    }
+    setIsSubmitting(false);
   };
 
   const handleContinue = () => {
@@ -346,12 +370,14 @@ const Assessment: React.FC = () => {
               ))}
             </div>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-primary text-white py-2 px-4 rounded hover:bg-primary/90 transition-all duration-300 hover:text-white/60"
-          >
-            Submit Job Questionnaire
-          </button>
+          <div className="flex justify-center w-full">
+            <button
+              type="submit"
+              className="bg-primary text-white text-center py-2 px-4 rounded hover:bg-primary/90 transition-all duration-300 hover:text-white/60"
+            >
+              Submit Job Questionnaire
+            </button>
+          </div>
         </form>
 
         <AlertDialog open={isSubmitting || submissionComplete}>
@@ -378,7 +404,14 @@ const Assessment: React.FC = () => {
                 <AlertDialogAction onClick={handleContinue}>
                   Continue
                 </AlertDialogAction>
-              ) : null}
+              ) : (
+                <AlertDialogAction
+                  className="bg-red-600 hover:bg-red-500"
+                  onClick={handleCancel}
+                >
+                  Cancel Submission
+                </AlertDialogAction>
+              )}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

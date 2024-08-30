@@ -17,9 +17,12 @@ module.exports = {
       },
     },
     extend: {
+      boxShadow: {
+        "custom-blue": "0px 5px 20px 5px hsla(199, 89%, 48%, 0.5)",
+      },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
-        nunito: ['Nunito', 'sans-serif'],
+        nunito: ["Nunito", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -1,23 +1,53 @@
 import React, { useEffect, useState } from "react";
-import ProfileIcon from "../assets/profile__icon.png";
 import { useUser } from "@/context/UserContext";
 import { Link } from "react-router-dom";
-import { User } from "lucide-react";
+import { User, BriefcaseBusiness, LogOut, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "@/config/settings";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, fetchUser] = useUser();
   const navigate = useNavigate();
 
-  useEffect(() => console.log(user), [user]);
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        fetchUser();
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <nav
-      className="fixed top-0 left-0 right-0 z-10 bg-primary mb-20"
-      style={{ fontFamily: "Poppins, sans-serif" }}
-    >
+    <nav className="fixed top-0 left-0 right-0 z-10 bg-primary mb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
@@ -29,11 +59,16 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          <div
-            className={`lg:flex items-center space-x-8 ${
-              menuOpen ? "hidden" : "hidden"
-            } lg:block`}
-          >
+          <div className="lg:hidden">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-white hover:text-gray-300 focus:outline-none transition-all duration-300"
+            >
+              {menuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+
+          <div className="hidden lg:flex items-center space-x-8">
             <Link
               to="/home"
               className="text-primary-foreground font-semibold hover:text-gray-700"
@@ -47,109 +82,120 @@ const Header: React.FC = () => {
               Jobs
             </Link>
             <Link
-              to="/jobs"
-              className="text-primary-foreground hover:text-gray-700"
-            >
-              CV Grading
-            </Link>
-            <Link
-              to="/jobs"
+              to="/interview"
               className="text-primary-foreground hover:text-gray-700"
             >
               Interview Simulation
             </Link>
-          </div>
-          <div className="flex items-center">
             {!user && (
               <Button
                 onClick={() => navigate("/login")}
-                className="hidden lg:inline-flex border border-white rounded-full hover:bg-white hover:text-primary"
+                className="border border-white rounded-full hover:bg-white hover:text-primary"
               >
                 <User />
                 <span className="ml-2 text-lg">Login</span>
               </Button>
             )}
             {user && (
-              <Button className="hidden lg:inline-flex border border-white rounded-full hover:bg-white hover:text-primary">
-                <User />
-                <span className="ml-2 text-lg">Profile</span>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="border border-white rounded-full hover:bg-white hover:text-primary">
+                    <User className="h-6 w-6" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <User className="mr-2 h-4 w-4" />
+                      <span className="text-md">Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/saved-jobs">
+                      <BriefcaseBusiness className="mr-2 h-4 w-4" />
+                      <span className="text-md">Saved Jobs</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span className="text-md">Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
-            <div className="lg:hidden">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="text-gray-900 hover:text-gray-700 focus:outline-none"
-              >
-                <svg
-                  className="h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
           </div>
         </div>
       </div>
 
       {menuOpen && (
-        <>
+        <div className="lg:hidden">
           <div
             onClick={() => setMenuOpen(false)}
             className="fixed inset-0 bg-gray-800 bg-opacity-10 z-0"
           />
           <div
-            className={`fixed top-20 left-0 right-0 w-full bg-white  shadow-lg z-20 transition-transform transform ${
+            className={`fixed inset-x-0 top-20 transition-transform transform ${
               menuOpen ? "translate-y-0" : "-translate-y-full"
-            }`}
+            } bg-white shadow-lg z-20 duration-300 ease-in-out`}
           >
             <div className="px-4 sm:px-6 lg:px-14 pt-2 pb-3 space-y-1">
               <Link
                 to="/home"
-                className="block text-gray-900 hover:text-gray-700"
+                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
               >
                 Home
               </Link>
               <Link
                 to="/jobs"
-                className="block text-gray-900 hover:text-gray-700"
+                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
               >
                 Jobs
               </Link>
               <Link
-                to="/jobs"
-                className="block text-gray-900 hover:text-gray-700"
-              >
-                CV Grading
-              </Link>
-              <Link
-                to="/jobs"
-                className="block text-gray-900 hover:text-gray-700"
+                to="/interview"
+                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
               >
                 Interview Simulation
               </Link>
-              <Link
-                to="/profile"
-                className="block text-gray-900 hover:text-gray-700"
-              >
-                Profile
-                <img
-                  className="h-8 w-auto ml-2 inline"
-                  src={ProfileIcon}
-                  alt="Profile Icon"
-                />
-              </Link>
+              {user && (
+                <>
+                  <Link
+                    to="/profile"
+                    className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                  >
+                    <User className="inline mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                  <Link
+                    to="/saved-jobs"
+                    className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                  >
+                    <BriefcaseBusiness className="inline mr-2 h-4 w-4" />
+                    Saved Jobs
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                  >
+                    <LogOut className="inline mr-2 h-4 w-4" />
+                    Logout
+                  </button>
+                </>
+              )}
+              {!user && (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="block w-full text-left text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                >
+                  <User className="inline mr-2 h-4 w-4" />
+                  Login
+                </button>
+              )}
             </div>
           </div>
-        </>
+        </div>
       )}
     </nav>
   );
