@@ -19,7 +19,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/assessment" element={<Assessment />} />
             <Route path="/jobrecommendation" element={<JobRecommendation />} />
-            <Route path="/jobdetail" element={<JobDetail />} />
+            <Route path="/jobdetail/:id?" element={<JobDetail />} />
           </Routes>
         </JobProvider>
       </UserProvider>

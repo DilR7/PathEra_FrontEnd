@@ -85,10 +85,13 @@ const JobFilter: React.FC<JobFilterProps> = ({
             </PopoverTrigger>
             <PopoverContent className="ml-8 grid grid-cols-2 gap-2 text-sm">
               {workModelOptions.map((option) => (
-                <label key={option.value} className="flex items-center">
+                <label
+                  key={option.value}
+                  className="flex items-center text-md text-nowrap"
+                >
                   <input
                     type="checkbox"
-                    className="mr-2"
+                    className="mr-2 w-4 h-4"
                     checked={filters.jobModel.includes(option.value)}
                     onChange={() => onFilterChange("jobModel", option.value)}
                   />
@@ -110,10 +113,13 @@ const JobFilter: React.FC<JobFilterProps> = ({
             </PopoverTrigger>
             <PopoverContent className="ml-8 grid grid-cols-2 gap-2 text-sm">
               {jobTypeOptions.map((option) => (
-                <label key={option.value} className="flex items-center">
+                <label
+                  key={option.value}
+                  className="flex items-center text-md text-nowrap"
+                >
                   <input
                     type="checkbox"
-                    className="mr-2"
+                    className="mr-2 w-4 h-4"
                     checked={filters.jobType.includes(option.value)}
                     onChange={() => onFilterChange("jobType", option.value)}
                   />
@@ -135,10 +141,13 @@ const JobFilter: React.FC<JobFilterProps> = ({
             </PopoverTrigger>
             <PopoverContent className="ml-8 grid grid-cols-2 gap-2 text-sm">
               {jobLevelOptions.map((option) => (
-                <label key={option.value} className="flex items-center">
+                <label
+                  key={option.value}
+                  className="flex items-center text-md text-nowrap"
+                >
                   <input
                     type="checkbox"
-                    className="mr-2"
+                    className="mr-2 w-4 h-4"
                     checked={filters.jobLevel.includes(option.value)}
                     onChange={() => onFilterChange("jobLevel", option.value)}
                   />

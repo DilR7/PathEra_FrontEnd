@@ -63,14 +63,14 @@ const Header: React.FC = () => {
             {!user && (
               <Button
                 onClick={() => navigate("/login")}
-                className="hidden lg:inline-flex border border-white rounded-full"
+                className="hidden lg:inline-flex border border-white rounded-full hover:bg-white hover:text-primary"
               >
                 <User />
                 <span className="ml-2 text-lg">Login</span>
               </Button>
             )}
             {user && (
-              <Button className="hidden lg:inline-flex border border-white rounded-full">
+              <Button className="hidden lg:inline-flex border border-white rounded-full hover:bg-white hover:text-primary">
                 <User />
                 <span className="ml-2 text-lg">Profile</span>
               </Button>

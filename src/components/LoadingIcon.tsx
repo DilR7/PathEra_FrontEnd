@@ -1,61 +1,71 @@
 const LoadingIcon = ({ color = "#0EA5E9" }: { color?: string }) => {
+  const rectSize = 60;
+  const spacing = 30; // space between rectangles
+  const viewBoxWidth = 3 * rectSize + 2 * spacing;
+  const viewBoxHeight = 2 * rectSize;
+
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
+      width="200"
+      height="150"
+    >
       <rect
         fill={color}
         stroke={color}
-        stroke-width="17"
-        width="30"
-        height="30"
-        x="25"
-        y="50"
+        strokeWidth="10"
+        width={rectSize}
+        height={rectSize}
+        x="0"
+        y="20"
       >
         <animate
           attributeName="y"
           calcMode="spline"
-          dur="2"
-          values="50;120;50;"
+          dur="2s"
+          values="20;70;20;"
           keySplines=".5 0 .5 1;.5 0 .5 1"
           repeatCount="indefinite"
-          begin="-.4"
+          begin="-.4s"
         ></animate>
       </rect>
       <rect
         fill={color}
         stroke={color}
-        stroke-width="17"
-        width="30"
-        height="30"
-        x="85"
-        y="50"
+        strokeWidth="10"
+        width={rectSize}
+        height={rectSize}
+        x={rectSize + spacing}
+        y="20"
       >
         <animate
           attributeName="y"
           calcMode="spline"
-          dur="2"
-          values="50;120;50;"
+          dur="2s"
+          values="20;70;20;"
           keySplines=".5 0 .5 1;.5 0 .5 1"
           repeatCount="indefinite"
-          begin="-.2"
+          begin="-.2s"
         ></animate>
       </rect>
       <rect
         fill={color}
         stroke={color}
-        stroke-width="17"
-        width="30"
-        height="30"
-        x="145"
-        y="50"
+        strokeWidth="10"
+        width={rectSize}
+        height={rectSize}
+        x={2 * (rectSize + spacing)}
+        y="20"
       >
         <animate
           attributeName="y"
           calcMode="spline"
-          dur="2"
-          values="50;120;50;"
+          dur="2s"
+          values="20;70;20;"
           keySplines=".5 0 .5 1;.5 0 .5 1"
           repeatCount="indefinite"
-          begin="0"
+          begin="0s"
         ></animate>
       </rect>
     </svg>

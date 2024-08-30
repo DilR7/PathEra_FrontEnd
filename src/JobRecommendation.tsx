@@ -21,15 +21,19 @@ const JobRecommendation: React.FC = () => {
   const [allJobs, setAllJobs] = useState<JobType[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<JobType[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(`${BASE_URL}/jobs`);
         setAllJobs(response.data);
         setFilteredJobs(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -53,7 +57,7 @@ const JobRecommendation: React.FC = () => {
       jobType: [],
       jobLevel: [],
     });
-    setFilteredJobs(allJobs); // Reset filtered jobs when all filters are cleared
+    setFilteredJobs(allJobs);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,32 +89,18 @@ const JobRecommendation: React.FC = () => {
   };
 
   useEffect(() => {
-    applyFilters(); // Apply filters when they change
+    applyFilters();
   }, [filters, searchQuery]);
 
   return (
     <MainLayout>
-      {/* <div className="mb-4 flex justify-between px-8 mt-24">
-        <input
-          placeholder="Find Job"
-          className="py-2 px-4 outline-none text-sm border-2 rounded-full"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <button
-          className="border-0 py-2 px-4 rounded-full bg-mariner-700 text-mariner-100"
-          onClick={handleSearch}
-        >
-          Find Job
-        </button>
-      </div> */}
       <div className="flex flex-col md:flex-row w-full border-t-2 border-mariner-300">
         <JobFilter
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearAll={handleClearAll}
         />
-        {filteredJobs && <JobList jobs={filteredJobs} />}
+        <JobList jobs={filteredJobs} loading={loading} />
       </div>
     </MainLayout>
   );

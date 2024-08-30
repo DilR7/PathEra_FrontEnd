@@ -7,10 +7,12 @@ import { useJob } from "./context/JobContextType";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { PiDotOutlineFill } from "react-icons/pi";
 import { FaCircleCheck } from "react-icons/fa6";
+import { useParams } from "react-router-dom";
 import { AiFillCloseCircle } from "react-icons/ai";
 
 const JobDetail: React.FC = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { id } = useParams();
   const { jobDetails } = useJob();
   if (!jobDetails) {
     return <p>No job details available</p>;

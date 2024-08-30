@@ -4,7 +4,18 @@ import MainLayout from "./layout/MainLayout";
 import axios from "axios";
 import { BASE_URL } from "./config/settings";
 import { SkillType } from "./types/SkillType";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
+import LoadingIcon from "./components/LoadingIcon";
+import { useNavigate } from "react-router-dom";
 
 const Assessment: React.FC = () => {
   const [skills, setSkills] = useState<SkillType[]>([]);
@@ -16,14 +27,13 @@ const Assessment: React.FC = () => {
   const [inputValueExperience, setInputValueExperience] = useState<string>("");
   const [degree, setDegree] = useState<string>("No Degree");
   const [suggestionsSkills, setSuggestionsSkills] = useState<SkillType[]>([]);
+  const [experience, setExperience] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submissionComplete, setSubmissionComplete] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleInputChangeJobTitles = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValueJobTitles(e.target.value);
-  };
-
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleAddJobTitle();
   };
 
   const handleInputChangeSkills = (e: ChangeEvent<HTMLInputElement>) => {
@@ -97,10 +107,39 @@ const Assessment: React.FC = () => {
     fetchData();
   }, []);
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmissionComplete(false);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      console.log("Data:", {
+        selectedJobTitles,
+        experience,
+        selectedSkills,
+        degree,
+        selectedExperiences,
+      });
+      setSubmissionComplete(true);
+    } catch (error) {
+      console.error("Submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleContinue = () => {
+    navigate("/jobrecommendation");
+  };
+
   return (
     <MainLayout>
       <div className="px-8 md:px-24 py-8">
-        <div className="bg-primary text-white px-4 md:px-16 py-8 rounded-lg w-full mt-12">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-primary text-white px-4 md:px-16 py-8 rounded-lg w-full mt-12"
+        >
           <h1 className="text-center text-3xl font-bold mb-4">
             Jobs Questionnaire
           </h1>
@@ -108,7 +147,7 @@ const Assessment: React.FC = () => {
             Take our questionnaire so that we can determine which jobs fit you
             the most
           </p>
-          <form onSubmit={handleFormSubmit}>
+          <div>
             <div className="mb-6">
               <label className="block text-lg font-semibold mb-2">
                 Your Job Titles
@@ -123,7 +162,8 @@ const Assessment: React.FC = () => {
                 />
 
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleAddJobTitle}
                   className="px-4 py-2 bg-white text-primary font-semibold rounded-r-md border border-gray-300 hover:bg-gray-200 transition-colors duration-300"
                 >
                   Add
@@ -146,12 +186,14 @@ const Assessment: React.FC = () => {
                 ))}
               </div>
             </div>
-          </form>
+          </div>
           <div className="mb-6">
             <label className="block text-lg font-semibold mb-2">
               Years of Experience
             </label>
             <input
+              value={experience}
+              onChange={(e) => setExperience(Number(e.target.value))}
               type="number"
               placeholder="5"
               className="w-full p-2 text-black rounded-l-md border border-r-0 border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300"
@@ -171,7 +213,7 @@ const Assessment: React.FC = () => {
               />
             </div>
             {suggestionsSkills.length > 0 && (
-              <ul className="absolute z-10 bg-white text-black w-full border border-gray-300 rounded mt-1 max-h-60 overflow-auto">
+              <ul className="absolute z-10 bg-white text-black w-72 sm:w-96 max-w-96 border border-gray-300 rounded mt-1 max-h-60 overflow-y-scroll">
                 {suggestionsSkills.map((skill) => (
                   <li
                     key={skill.id}
@@ -310,7 +352,36 @@ const Assessment: React.FC = () => {
           >
             Submit Job Questionnaire
           </button>
-        </div>
+        </form>
+
+        <AlertDialog open={isSubmitting || submissionComplete}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className={submissionComplete ? "" : "-mb-24"}>
+                {submissionComplete ? "Submission Successful" : "Submitting..."}
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            <AlertDialogDescription>
+              {submissionComplete ? (
+                "Your submission was successful. Click continue to proceed."
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  <LoadingIcon />
+                  <div className="mt-4 text-lg">
+                    Hold on... This should take 2-3 minutes
+                  </div>
+                </div>
+              )}
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              {submissionComplete ? (
+                <AlertDialogAction onClick={handleContinue}>
+                  Continue
+                </AlertDialogAction>
+              ) : null}
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </MainLayout>
   );
