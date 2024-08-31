@@ -37,7 +37,6 @@ const Header: React.FC = () => {
       if (response.status === 200) {
         fetchUser();
         localStorage.removeItem("token");
-        navigate("/login");
       }
     } catch (error) {
       console.error(error);
@@ -50,7 +49,7 @@ const Header: React.FC = () => {
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
             <Link
-              to="/jobs"
+              to="/home"
               className="text-primary-foreground font-bold text-2xl hover:text-gray-700"
             >
               PathEra
@@ -146,7 +145,7 @@ const Header: React.FC = () => {
                 Home
               </Link>
               <Link
-                to="/jobs"
+                to="/jobrecommendation"
                 className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
               >
                 Jobs

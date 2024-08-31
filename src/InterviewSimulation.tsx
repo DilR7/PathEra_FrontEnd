@@ -6,25 +6,35 @@ import { BASE_URL } from "./config/settings";
 import axios from "axios";
 import { QuestionType } from "./types/QuestionType";
 import InterviewerIcon from "./assets/InterviewerIcon.png";
-import { Skeleton } from "./components/ui/skeleton";
 import { Mic } from "lucide-react";
 import { useMicrophone } from "./hooks/useMicrophone";
 import { Button } from "./components/ui/button";
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import { useToaster } from "./context/ToastContext";
+import { FLASK_URL } from "./config/settings";
+import QuestionDisplay from "./components/QuestionDisplay";
+import SpeechEngine from "./components/SpeechEngine";
 
-const InterviewSimulation = () => {
+const InterviewSimulation: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [jobTitle, setJobTitle] = useState<string>("");
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [questions, setQuestions] = useState<QuestionType[] | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isAudioVisible, setIsAudioVisible] = useState(false);
-  const [audioLoaded, setAudioLoaded] = useState(false);
   const [loadingTranscription, setLoadingTranscription] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [currentScore, setCurrentScore] = useState<number | null>(null);
+  const [currentFeedback, setCurrentFeedback] = useState<string | null>(null);
+  const [showScore, setShowScore] = useState(false);
+  const [scoreVisible, setScoreVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // What will be sent to the server
+  const [answers, setAnswers] = useState<string[]>([]);
   const [scores, setScores] = useState<number[]>([]);
-  const [feedbacks, setFeedbacks] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<string[]>([]);
+
   const {
     isRecording,
     audio,
@@ -39,13 +49,26 @@ const InterviewSimulation = () => {
 
   useEffect(() => {
     const savedJobTitle = localStorage.getItem("selectedJobTitle");
-    savedJobTitle ? setJobTitle(savedJobTitle) : setOpen(true);
-    if (savedJobTitle) fetchQuestions(savedJobTitle);
+    const cachedQuestions = localStorage.getItem("questions");
+
+    if (savedJobTitle) {
+      setJobTitle(savedJobTitle);
+
+      if (cachedQuestions) {
+        setQuestions(JSON.parse(cachedQuestions));
+        setLoadingQuestions(false);
+      } else {
+        fetchQuestions(savedJobTitle);
+      }
+    } else {
+      setOpen(true);
+    }
   }, []);
 
   useEffect(() => {
     if (audio) {
-      setTimeout(() => setIsAudioVisible(true), 100);
+      setIsAudioVisible(true);
+      transcribeAudio(audio);
     }
   }, [audio]);
 
@@ -62,7 +85,9 @@ const InterviewSimulation = () => {
     setLoadingQuestions(true);
     try {
       const response = await axios.get(`${BASE_URL}/questions/${title}`);
+      console.log("Questions:", response.data);
       setQuestions(response.data);
+      localStorage.setItem("questions", JSON.stringify(response.data));
       setCurrentQuestion(0);
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -71,7 +96,7 @@ const InterviewSimulation = () => {
     }
   };
 
-  const onFinalize = async (blobUrl: string) => {
+  const transcribeAudio = async (blobUrl: string) => {
     setLoadingTranscription(true);
     try {
       const blob = await fetch(blobUrl).then((r) => r.blob());
@@ -97,10 +122,7 @@ const InterviewSimulation = () => {
       toastError("Error during transcription. Please try again.");
     } finally {
       setLoadingTranscription(false);
-      setTimeout(() => {
-        setIsAudioVisible(false);
-        setAudioLoaded(false);
-      }, 300);
+      setIsAudioVisible(false);
     }
   };
 
@@ -109,6 +131,53 @@ const InterviewSimulation = () => {
     resetRecording();
     startRecording();
   };
+
+  const onFinalize = async () => {
+    if (!questions) return;
+    try {
+      setLoading(true);
+      const response = await axios.post(`${FLASK_URL}/evaluate`, {
+        question_id: questions[currentQuestion].id,
+        user_answer: transcription,
+      });
+      console.log("Response:", response.data);
+      setCurrentScore(response.data.score);
+      setCurrentFeedback("Test feedback");
+      setAnswers((prev) => [...prev, transcription || "No answer"]);
+      setScores((prev) => [...prev, response.data.score]);
+      setFeedback((prev) => [...prev, "Test feedback"]);
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+      toastError("Failed to submit answer. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNextQuestion = () => {
+    if (questions && currentQuestion < questions.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+      setTranscription(null);
+      setCurrentScore(null);
+      setShowScore(false);
+      setIsAudioVisible(false);
+      resetRecording();
+    }
+  };
+
+  useEffect(() => {
+    if (currentScore !== null) {
+      setShowScore(true);
+      setTimeout(() => {
+        setScoreVisible(true);
+      }, 10);
+    } else {
+      setScoreVisible(false);
+      setTimeout(() => {
+        setShowScore(false);
+      }, 300);
+    }
+  }, [currentScore]);
 
   return (
     <MainLayout>
@@ -125,74 +194,84 @@ const InterviewSimulation = () => {
           </p>
         )}
         <br />
-        <div className="flex flex-col gap-6 md:gap-8 lg:gap-12 px-4 md:px-8 lg:px-12 py-8 border border-primary rounded-xl shadow-custom-blue min-h-[32rem]">
+        <div className="flex flex-col gap-6 md:gap-8 lg:gap-12 px-4 md:px-8 lg:px-12 py-8 border border-primary rounded-xl shadow-custom-blue">
           <Progress
-            value={(currentQuestion + 1) * 10}
+            value={((currentQuestion + 1) / (questions?.length || 1)) * 100}
             className="bg-gray-200 h-3 md:h-4 lg:h-5"
           />
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row gap-4 items-start max-w-full">
-              {questions ? (
-                <div className="flex flex-grow items-start">
+            <QuestionDisplay
+              question={questions ? questions[currentQuestion] : undefined}
+              loading={loadingQuestions}
+            />
+            <div className="flex justify-end w-full">
+              <SpeechEngine
+                audio={audio}
+                transcription={transcription}
+                isAudioVisible={isAudioVisible}
+                loadingTranscription={loadingTranscription}
+                onReRecord={onReRecord}
+                onFinalize={onFinalize}
+                startRecording={startRecording}
+                resetRecording={resetRecording}
+                loading={loading}
+                showScore={showScore}
+              />
+            </div>
+            <div className="flex flex-col md:flex-row gap-4 items-start w-full md:max-w-[80%]">
+              {showScore && (
+                <div
+                  className={`flex flex-grow items-start transition-all duration-300 ease-out transform ${
+                    scoreVisible
+                      ? "scale-100 opacity-100"
+                      : "scale-75 opacity-0"
+                  }`}
+                >
                   <img
                     src={InterviewerIcon}
                     className="w-8 md:w-10 lg:w-12"
                     alt="Interviewer"
                   />
-                  <div className="ml-4 bg-gray-100 p-3 md:p-4 rounded-lg">
-                    <p className="text-sm md:text-lg">
-                      {questions[currentQuestion].question}
-                    </p>
+                  <div className="ml-4 bg-gray-100 p-3 md:p-4 rounded-lg flex flex-col">
+                    <div className="flex flex-col gap-2">
+                      <p className="text-sm md:text-lg">
+                        Your answer scored {currentScore} points.
+                      </p>
+                      <p className="text-sm md:text-xl font-bold mt-2">
+                        Feedback
+                      </p>
+                      <p className="text-sm md:text-lg">
+                        {currentFeedback || "No feedback available."}
+                      </p>
+                      <p className="text-sm md:text-xl font-bold mt-2">
+                        Sample Answer
+                      </p>
+                      <p className="text-sm md:text-lg">
+                        {questions && questions[currentQuestion].sample_answer}
+                      </p>
+                    </div>
+                    {currentQuestion < questions!.length - 1 ? (
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          className="px-4 py-2 bg-primary text-white rounded-md transition-all duration-300 active:scale-95 shadow-md hover:shadow-lg focus:outline-none"
+                          onClick={handleNextQuestion}
+                        >
+                          Next Question
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          className="px-4 py-2 bg-primary text-white rounded-md transition-all duration-300 active:scale-95 shadow-md hover:shadow-lg focus:outline-none"
+                          onClick={() => console.log(answers, scores, feedback)}
+                        >
+                          Submit Answers
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
-              ) : (
-                loadingQuestions && (
-                  <div className="flex flex-grow items-start">
-                    <Skeleton className="w-8 md:w-10 lg:w-12 rounded-full" />
-                    <Skeleton className="ml-4 w-full h-4 md:h-5 lg:h-6" />
-                  </div>
-                )
               )}
-            </div>
-            <div className="flex justify-end w-full">
-              <div
-                className={`transition-all duration-300 ease-out transform ${
-                  isAudioVisible || transcription
-                    ? "scale-100 opacity-100"
-                    : "scale-75 opacity-0"
-                } bg-blue-100 flex flex-col gap-2 p-4 rounded-lg ${
-                  transcription ? "w-[40%]" : "md:w-[300px]"
-                }`}
-              >
-                {!transcription && audio && (
-                  <>
-                    <audio
-                      controls
-                      src={audio}
-                      className="w-full"
-                      onCanPlayThrough={() => setAudioLoaded(true)}
-                    />
-                    <Button
-                      onClick={() => onFinalize(audio)}
-                      className="mt-2 px-4 py-2 bg-primary text-white rounded-md transition-all duration-300 active:scale-95 shadow-md hover:shadow-lg focus:outline-none"
-                      disabled={!audioLoaded || loadingTranscription}
-                    >
-                      {loadingTranscription ? "Loading" : "Finalize Answer"}
-                    </Button>
-                  </>
-                )}
-                {transcription && (
-                  <div className="bg-blue-100 rounded-lg">
-                    <p className="text-sm md:text-lg">{transcription}</p>
-                    <Button
-                      onClick={onReRecord}
-                      className="mt-2 px-4 py-2 bg-primary text-white rounded-md transition-all duration-300 active:scale-95 shadow-md hover:shadow-lg focus:outline-none"
-                    >
-                      Re-record
-                    </Button>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
           <div className="flex justify-center mt-auto">

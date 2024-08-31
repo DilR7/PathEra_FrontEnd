@@ -46,7 +46,6 @@ export const useMicrophone = (duration: number = 60) => {
         const durationRecorded =
           (Date.now() - (startTimeRef.current || 0)) / 1000;
         if (durationRecorded >= 1) {
-          // Ensuring the minimum recording time is 4 seconds
           setAudio(audioUrl);
         } else {
           toastError("Audio should be at least 4 seconds long.");
@@ -74,12 +73,10 @@ export const useMicrophone = (duration: number = 60) => {
   };
 
   const resetRecording = () => {
-    // Stop any ongoing recording
     if (isRecording) {
       stopRecording();
     }
 
-    // Reset all states to their initial values
     setAudio(null);
     setRemainingTime(duration);
     audioChunksRef.current = [];
@@ -92,6 +89,6 @@ export const useMicrophone = (duration: number = 60) => {
     remainingTime,
     startRecording,
     stopRecording,
-    resetRecording, // Expose resetRecording in the hook's return value
+    resetRecording, 
   };
 };
