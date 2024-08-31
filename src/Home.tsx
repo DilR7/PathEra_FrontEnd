@@ -12,8 +12,11 @@ import { LIST_JOBS } from "./data/listJob";
 import cvGrading from "./assets/CvGrading__Image.png";
 import AiInterview from "./assets/AiInterview__Image.png";
 import MainLayout from "./layout/MainLayout";
+import useSmoothScroll from "./hooks/useSmoothScroll";
 
 const Home = () => {
+  useSmoothScroll();
+
   return (
     <MainLayout>
       <div className="flex flex-col-reverse md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">

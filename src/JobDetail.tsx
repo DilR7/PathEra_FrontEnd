@@ -17,12 +17,13 @@ import {
   Factory,
   MapPin,
 } from "lucide-react";
+import useSmoothScroll from "./hooks/useSmoothScroll";
 
 const JobDetail: React.FC = () => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { jobDetails } = useJob();
   const { role, company, location, tags } = LIST_JOBS[0];
-
+  useSmoothScroll();
   const tagStyles = [
     { bg: "bg-purple-200", text: "text-purple-900" },
     { bg: "bg-green-200", text: "text-green-900" },

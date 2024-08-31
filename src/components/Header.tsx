@@ -20,9 +20,7 @@ const Header: React.FC = () => {
   const [user, fetchUser] = useUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  // useEffect(() => console.log(user), [user]);
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
