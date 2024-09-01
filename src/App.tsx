@@ -1,23 +1,38 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./Login";
-import Register from "./Register";
-import Home from "./Home";
-import Assessment from "./Assessment";
-import JobRecommendation from "./JobRecommendation";
-import JobDetail from "./JobDetail";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { JobProvider } from "./context/JobContextType";
-import InterviewSimulation from "./InterviewSimulation";
 import { ToastProvider } from "./context/ToastContext";
+import { PAGES, PageType } from "./config/menu-list";
+import AuthMiddleware from "./middleware/AuthMiddleware";
+import { useEffect } from "react";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <UserProvider>
         <JobProvider>
           <ToastProvider>
             <Routes>
-              <Route path="/login" element={<Login />} />
+              {PAGES.map((page: PageType) => (
+                <Route
+                  key={page.path}
+                  path={page.path}
+                  element={
+                    page.isAuth ? (
+                      <AuthMiddleware>{page.element}</AuthMiddleware>
+                    ) : (
+                      page.element
+                    )
+                  }
+                />
+              ))}
+              {/* <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/home" element={<Home />} />
               <Route path="/assessment" element={<Assessment />} />
@@ -27,6 +42,7 @@ function App() {
               />
               <Route path="/jobdetail/:id?" element={<JobDetail />} />
               <Route path="/interview" element={<InterviewSimulation />} />
+              <Route path="/results/:id" element={<Results />} /> */}
             </Routes>
           </ToastProvider>
         </JobProvider>
@@ -34,5 +50,15 @@ function App() {
     </Router>
   );
 }
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 export default App;

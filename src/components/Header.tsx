@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { User, BriefcaseBusiness, LogOut, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
@@ -18,9 +18,11 @@ import {
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, fetchUser] = useUser();
+  const location = useLocation();
+
   const navigate = useNavigate();
 
-  // useEffect(() => console.log(user), [user]);
+  useEffect(() => console.log(user), [user]);
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
@@ -35,8 +37,10 @@ const Header: React.FC = () => {
         }
       );
       if (response.status === 200) {
-        fetchUser();
         localStorage.removeItem("token");
+        localStorage.removeItem("questions");
+        localStorage.removeItem("selectedJobTitle");
+        fetchUser();
       }
     } catch (error) {
       console.error(error);
@@ -44,13 +48,15 @@ const Header: React.FC = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-10 bg-primary mb-20">
+    <nav className="fixed top-0 left-0 right-0 z-10 bg-primary mb-20 drop-shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
             <Link
               to="/home"
-              className="text-primary-foreground font-bold text-2xl hover:text-gray-700"
+              className={`text-primary-foreground font-bold text-2xl hover:text-gray-700 ${
+                location.pathname === "/home" ? "text-gray-700" : ""
+              }`}
             >
               PathEra
             </Link>
@@ -68,19 +74,31 @@ const Header: React.FC = () => {
           <div className="hidden lg:flex items-center space-x-8">
             <Link
               to="/home"
-              className="text-primary-foreground font-semibold hover:text-gray-700"
+              className={`hover:text-gray-700 ${
+                location.pathname === "/home"
+                  ? "font-bold text-primary-foreground"
+                  : "text-primary-foreground"
+              }`}
             >
               Home
             </Link>
             <Link
               to="/jobrecommendation"
-              className="text-primary-foreground font-medium hover:text-gray-700"
+              className={`hover:text-gray-700 ${
+                location.pathname === "/jobrecommendation"
+                  ? "font-bold text-primary-foreground"
+                  : "text-primary-foreground"
+              }`}
             >
               Jobs
             </Link>
             <Link
               to="/interview"
-              className="text-primary-foreground hover:text-gray-700"
+              className={`hover:text-gray-700 ${
+                location.pathname === "/interview"
+                  ? "font-bold text-primary-foreground"
+                  : "text-primary-foreground"
+              }`}
             >
               Interview Simulation
             </Link>
@@ -140,19 +158,29 @@ const Header: React.FC = () => {
             <div className="px-4 sm:px-6 lg:px-14 pt-2 pb-3 space-y-1">
               <Link
                 to="/home"
-                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2 ${
+                  location.pathname === "/home" ? "font-bold text-gray-700" : ""
+                }`}
               >
                 Home
               </Link>
               <Link
                 to="/jobrecommendation"
-                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2 ${
+                  location.pathname === "/jobrecommendation"
+                    ? "font-bold text-gray-700"
+                    : ""
+                }`}
               >
                 Jobs
               </Link>
               <Link
                 to="/interview"
-                className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2 ${
+                  location.pathname === "/interview"
+                    ? "font-bold text-gray-700"
+                    : ""
+                }`}
               >
                 Interview Simulation
               </Link>
@@ -160,20 +188,28 @@ const Header: React.FC = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                    className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2 ${
+                      location.pathname === "/profile"
+                        ? "font-bold text-gray-700"
+                        : ""
+                    }`}
                   >
                     <User className="inline mr-2 h-4 w-4" />
                     Profile
                   </Link>
                   <Link
                     to="/saved-jobs"
-                    className="block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
+                    className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2 ${
+                      location.pathname === "/saved-jobs"
+                        ? "font-bold text-gray-700"
+                        : ""
+                    }`}
                   >
                     <BriefcaseBusiness className="inline mr-2 h-4 w-4" />
                     Saved Jobs
                   </Link>
                   <button
-                    onClick={handleLogout}
+                    onClick={() => handleLogout()}
                     className="block w-full text-left text-gray-900 hover:text-gray-700 hover:bg-gray-100 rounded-md px-2 py-2"
                   >
                     <LogOut className="inline mr-2 h-4 w-4" />

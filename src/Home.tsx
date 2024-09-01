@@ -13,13 +13,15 @@ import cvGrading from "./assets/CvGrading__Image.png";
 import AiInterview from "./assets/AiInterview__Image.png";
 import MainLayout from "./layout/MainLayout";
 import useSmoothScroll from "./hooks/useSmoothScroll";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   useSmoothScroll();
+  const navigate = useNavigate();
 
   return (
-    <MainLayout>
-      <div className="flex flex-col-reverse md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 bg-gradient-to-r from-violet-200 to-sky-200">
+    <MainLayout overflowHidden={true}>
+      <div className="flex flex-col-reverse md:flex-row justify-center md:justify-between items-center h-screen px-4 md:px-14 md:pb-16 pb-32 bg-gradient-to-r from-violet-200 to-sky-200">
         <div className="hidden md:flex justify-center items-center w-full md:w-1/2 text-center">
           <img
             src={HeroImage}
@@ -28,15 +30,15 @@ const Home = () => {
           />
         </div>
 
-        <div className="w-full flex flex-col items-center md:w-1/2 text-center sm:p-16 p-8 lg:p-2">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <div className="w-full flex flex-col items-center md:w-1/2 text-center sm:p-12 p-8 lg:p-2">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-relaxed">
             Unleash Your Career With{" "}
             <span className="text-sky-50">PathEra</span>
           </h1>
           <img src={HeroImage} className="w-3/4 h-auto md:hidden" alt="Hero" />
-          <Button className="w-full text-lg md:w-60 mt-6" variant={"black"}>
+          {/* <Button className="w-full text-lg md:w-60 mt-6" variant={"black"}>
             Join Us
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -50,11 +52,10 @@ const Home = () => {
         <StatisticsCard title="Companies" value="50+" />
       </div>
 
-      <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-mariner-50 mb-20">
-        <h1 className="pb-5 font-bold text-3xl pt-5 md:pt-5 lg:pt-5">
-          Latest Featured <span className="text-primary">Jobs</span>
+      <div className="flex flex-col justify-center items-center px-12 bg-mariner-50 py-8">
+        <h1 className="font-bold text-3xl my-8">
+          Find <span className="text-primary">jobs</span> based on your skills
         </h1>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
           {LIST_JOBS.map((job, index) => (
             <Card key={index}>
@@ -68,8 +69,14 @@ const Home = () => {
             </Card>
           ))}
         </div>
-
-        <div className="mt-4 font-medium text-xl">Show More</div>
+        <div className="font-medium text-xl my-8 w-full flex justify-center">
+          <Button
+            onClick={() => navigate("/assessment")}
+            className="min-w-[300px] w-1/5 py-8 text-lg"
+          >
+            Find jobs for me
+          </Button>
+        </div>
       </div>
 
       <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-gradient-to-r from-violet-200 to-sky-200">

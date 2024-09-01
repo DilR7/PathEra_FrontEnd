@@ -1,9 +1,11 @@
 import { Button } from "./ui/button";
 import LoadingButton from "./ui/loading-button";
+import { Textarea } from "./ui/textarea";
 
 type SpeechEngineProps = {
   audio: string | null;
   transcription: string | null;
+  setTranscription: (transcription: string) => void;
   isAudioVisible: boolean;
   loadingTranscription: boolean;
   onReRecord: () => void;
@@ -17,6 +19,7 @@ type SpeechEngineProps = {
 const SpeechEngine = ({
   audio,
   transcription,
+  setTranscription,
   isAudioVisible,
   loadingTranscription,
   onReRecord,
@@ -28,11 +31,11 @@ const SpeechEngine = ({
 }: SpeechEngineProps) => (
   <div
     className={`transition-all duration-300 ease-out transform ${
-      isAudioVisible || transcription
+      isAudioVisible || transcription !== null
         ? "scale-100 opacity-100"
         : "scale-75 opacity-0"
     } bg-blue-100 flex flex-col gap-2 p-4 rounded-lg w-5/6 ${
-      transcription ? "md:w-2/3 lg:w-[40%]" : "md:w-[300px]"
+      transcription !== null ? "md:w-2/3 lg:w-[40%]" : "md:w-[300px]"
     }`}
   >
     {isAudioVisible && audio && !transcription && (
@@ -46,11 +49,23 @@ const SpeechEngine = ({
         {loadingTranscription && <LoadingButton className="mt-2" />}
       </>
     )}
-    {transcription && (
+    {transcription !== null && (
       <div className="bg-blue-100 rounded-lg">
-        <p className={`${showScore ? "" : "mb-4"} md:mb-0 text-sm md:text-lg`}>
-          {transcription}
-        </p>
+        {showScore ? (
+          <p
+            className={`${
+              showScore ? "" : "mb-4"
+            } md:mb-0 text-sm md:text-lg break-words whitespace-normal`}
+          >
+            {transcription}
+          </p>
+        ) : (
+          <Textarea
+            className="w-full text-sm md:text-lg min-h-[120px]"
+            onChange={(e) => setTranscription(e.target.value)}
+            value={transcription}
+          />
+        )}
         {!showScore && (
           <div className="flex flex-col md:flex-row gap-2 mt-2">
             <Button
