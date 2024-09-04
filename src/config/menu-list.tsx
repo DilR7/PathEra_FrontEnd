@@ -6,6 +6,7 @@ import JobRecommendation from "@/JobRecommendation";
 import JobDetail from "@/JobDetail";
 import InterviewSimulation from "@/InterviewSimulation";
 import Results from "@/Results";
+import History from "@/History";
 
 export type PageType = {
   name: string;
@@ -59,6 +60,12 @@ export const PAGES: PageType[] = [
     name: "Results",
     path: "/results/:id",
     element: <Results />,
+    isAuth: true,
+  },
+  {
+    name: "History",
+    path: "/history",
+    element: <History />,
     isAuth: true,
   },
 ];

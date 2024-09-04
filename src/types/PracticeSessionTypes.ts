@@ -1,6 +1,9 @@
 export type PracticeSessionType = {
-  userId: number;
-  jobTitle: string;
+  id: number;
+  user_id: number;
+  job_title: string;
+  average_score: number;
+  createdAt: string;
 };
 
 export type AnswerDetailsType = {

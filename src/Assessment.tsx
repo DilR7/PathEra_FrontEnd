@@ -4,6 +4,7 @@ import MainLayout from "./layout/MainLayout";
 import axios from "axios";
 import { BASE_URL } from "./config/settings";
 import { SkillType } from "./types/SkillType";
+import useSmoothScroll from "./hooks/useSmoothScroll";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,7 @@ import LoadingIcon from "./components/LoadingIcon";
 import { useNavigate } from "react-router-dom";
 
 const Assessment: React.FC = () => {
+  useSmoothScroll();
   const [skills, setSkills] = useState<SkillType[]>([]);
   const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -159,7 +161,7 @@ const Assessment: React.FC = () => {
 
   return (
     <MainLayout>
-      <div className="px-8 md:px-24 py-8">
+      <div className="px-4 md:px-24 py-8">
         <form
           onSubmit={handleSubmit}
           className="bg-primary text-white px-4 md:px-16 py-8 rounded-lg w-full mt-12"

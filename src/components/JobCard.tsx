@@ -59,7 +59,9 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
         </div>
       </div>
       <div className="flex items-end justify-between mt-auto">
-        <p className="text-gray-500 text-sm">{formatPostDate(job.createdAt)}</p>
+        <p className="text-gray-500 text-sm">
+          Posted {formatPostDate(job.createdAt)}
+        </p>
         <Button
           onClick={() => navigate(`/jobdetail/${job.id}`)}
           className="px-4 py-0 hover:bg-primary/70"

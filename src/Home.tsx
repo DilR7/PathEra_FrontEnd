@@ -79,7 +79,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-gradient-to-r from-violet-200 to-sky-200">
+      {/* <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-gradient-to-r from-violet-200 to-sky-200">
         <h1 className="pb-5 font-bold text-3xl pt-5 md:pt-5 lg:pt-3">
           CV <span className="text-primary">Grading</span>
         </h1>
@@ -98,7 +98,7 @@ const Home = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className=" flex flex-col justify-center items-center min-h-screen px-14 bg-white">
         <div className=" flex flex-col md:flex-row justify-center md:justify-between items-center">
@@ -111,7 +111,12 @@ const Home = () => {
             <h1 className="text-xl font-bold mb-2">
               Preparing for interview? Use our AI simulate interviews
             </h1>
-            <Button type="submit" className="w-60 mt-6" variant={"black"}>
+            <Button
+              onClick={() => navigate("/interview")}
+              type="submit"
+              className="w-60 mt-6"
+              variant={"black"}
+            >
               Try It Now!
             </Button>
           </div>

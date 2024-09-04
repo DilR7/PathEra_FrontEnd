@@ -19,6 +19,7 @@ import {
 import { useToaster } from "./context/ToastContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./components/ui/button";
+import { getScoreColor } from "./lib/utils";
 
 const Results = () => {
   const { id } = useParams();
@@ -39,8 +40,11 @@ const Results = () => {
         });
         if (response.status === 200) {
           setSession({
-            userId: response.data.userId,
-            jobTitle: response.data.jobTitle,
+            id: response.data.id,
+            user_id: response.data.userId,
+            job_title: response.data.jobTitle,
+            average_score: response.data.averageScore,
+            createdAt: response.data.createdAt,
           });
           setAnswers(response.data.answers);
         }
@@ -63,12 +67,6 @@ const Results = () => {
 
   useSmoothScroll();
 
-  const getScoreColor = (score: number) => {
-    if (score < 50) return "text-red-500";
-    if (score >= 50 && score <= 80) return "text-yellow-500";
-    return "text-green-500";
-  };
-
   return (
     <MainLayout>
       <br />
@@ -77,7 +75,7 @@ const Results = () => {
         <div className="flex flex-col gap-6 px-4 md:px-8 lg:px-12 py-8 border border-primary rounded-xl shadow-custom-blue">
           {session && (
             <p className="text-center md:text-start text-xl md:text-2xl font-bold px-8">
-              {`${session?.jobTitle} Interview Results`}
+              {`${session?.job_title} Interview Results`}
             </p>
           )}
 

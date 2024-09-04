@@ -36,6 +36,7 @@ export function UserProvider({ children }: PropsWithChildren<{}>) {
       if (error.response && error.response.status === 400) {
         localStorage.removeItem("token");
       }
+      console.log(error);
       setUser(null);
     } finally {
       setLoading(false);

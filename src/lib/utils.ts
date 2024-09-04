@@ -12,17 +12,23 @@ export function formatPostDate(createdAt: string): string {
   const diffInDays = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
 
   if (diffInDays === 0) {
-    return "Posted today";
+    return "today";
   } else if (diffInDays < 7) {
-    return `Posted ${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
   } else if (diffInDays < 30) {
     const diffInWeeks = Math.floor(diffInDays / 7);
-    return `Posted ${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
+    return `${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
   } else {
-    return `Posted on ${date.getDate().toString().padStart(2, "0")}-${(
+    return `on ${date.getDate().toString().padStart(2, "0")}-${(
       date.getMonth() + 1
     )
       .toString()
       .padStart(2, "0")}-${date.getFullYear()}`;
   }
 }
+
+export const getScoreColor = (score: number) => {
+  if (score < 50) return "text-red-500";
+  if (score >= 50 && score <= 80) return "text-yellow-500";
+  return "text-green-500";
+};
