@@ -61,7 +61,7 @@ const SpeechEngine = ({
           </p>
         ) : (
           <Textarea
-            className="w-full text-sm md:text-lg min-h-[120px]"
+            className="w-full text-sm md:text-lg min-h-[180px]"
             onChange={(e) => setTranscription(e.target.value)}
             value={transcription}
           />

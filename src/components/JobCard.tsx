@@ -34,12 +34,6 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           </div>
         </div>
 
-        <div className="flex justify-start mb-2">
-          <div className="bg-blue-200 text-blue-800 text-sm font-semibold px-2 py-1 rounded-lg">
-            Similarity: {100}%
-          </div>
-        </div>
-
         <div className="flex gap-2 flex-wrap">
           {job.job_model && (
             <span className="bg-purple-200 text-purple-700 text-xs font-medium px-2 py-1 rounded-lg">

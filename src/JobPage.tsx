@@ -12,7 +12,7 @@ type FilterType = {
   jobLevel: string[];
 };
 
-const JobRecommendation: React.FC = () => {
+const JobPage: React.FC = () => {
   const [filters, setFilters] = useState<FilterType>({
     jobModel: [],
     jobType: [],
@@ -100,4 +100,4 @@ const JobRecommendation: React.FC = () => {
   );
 };
 
-export default JobRecommendation;
+export default JobPage;

@@ -90,9 +90,9 @@ const Header: React.FC = () => {
               Home
             </Link>
             <Link
-              to="/jobrecommendation"
+              to="/jobs"
               className={`hover:text-gray-700 ${
-                location.pathname === "/jobrecommendation"
+                location.pathname === "/jobs"
                   ? "font-bold text-primary-foreground"
                   : "text-primary-foreground"
               }`}
@@ -180,9 +180,9 @@ const Header: React.FC = () => {
                 Home
               </Link>
               <Link
-                to="/jobrecommendation"
+                to="/jobs"
                 className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 px-4 py-2 ${
-                  location.pathname === "/jobrecommendation"
+                  location.pathname === "/jobs"
                     ? "border-l-4 border-primary bg-gray-100"
                     : ""
                 }`}

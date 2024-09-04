@@ -6,7 +6,8 @@ import { PracticeSessionType } from "./types/PracticeSessionTypes";
 import { formatPostDate } from "./lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { getScoreColor } from "./lib/utils";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const History = () => {
   const [sessions, setSessions] = useState<PracticeSessionType[] | null>(null);
@@ -29,6 +30,12 @@ const History = () => {
     fetchData();
   }, []);
 
+  const getScoreColor = (score: number) => {
+    if (score < 50) return "red";
+    if (score >= 50 && score <= 80) return "#feb600";
+    return "#109932";
+  };
+
   return (
     <MainLayout>
       <br />
@@ -44,25 +51,30 @@ const History = () => {
                 <div
                   key={session.id}
                   onClick={() => navigate(`/results/${session.id}`)}
-                  className="group flex justify-between border-b border-gray-300 py-4 md:py-6 pl-4 cursor-pointer transition-all duration-500 ease-in-out hover:pr-6 hover:pl-6 hover:text-primary hover:border-primary hover:border-b-2"
+                  className="group flex items-center justify-between border-b border-gray-300 pl-2 py-4 md:py-6 md:pl-4 cursor-pointer transition-all duration-500 ease-in-out md:hover:pr-6 md:hover:pl-6 hover:text-primary hover:border-primary hover:border-b-2"
                 >
-                  <p className="text-lg md:text-xl lg:text-2xl">
+                  <p className="text-md md:text-xl lg:text-2xl">
                     {session.job_title}
                   </p>
                   <div className="flex gap-2 items-center md:gap-4">
-                    <p
-                      className={`font-bold text-md md:text-lg lg:text-xl ${getScoreColor(
-                        session.average_score
-                      )}`}
-                    >
-                      {Number(session.average_score).toFixed(2)}%
-                    </p>
                     <p className="text-md md:text-lg lg:text-xl">
                       {formatPostDate(session.createdAt)}
                     </p>
+                    <div className="w-8 h-8 md:w-12 md:h-12">
+                      <CircularProgressbar
+                        value={Number(session.average_score)}
+                        text={`${Number(session.average_score).toFixed(0)}%`}
+                        styles={buildStyles({
+                          textSize: "30px",
+                          textColor: "#000",
+                          pathColor: getScoreColor(session.average_score),
+                          trailColor: "#d6d6d6",
+                        })}
+                      />
+                    </div>
                     <ArrowUpRight
-                      className="text-primary transform opacity-0 -translate-x-[150%] translate-y-full transition-all duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
-                      size={24}
+                      className="hidden sm:block text-primary transform opacity-0 -translate-x-[150%] translate-y-full transition-all duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
+                      size={32}
                     />
                   </div>
                 </div>

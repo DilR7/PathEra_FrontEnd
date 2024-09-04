@@ -19,7 +19,7 @@ import LoadingButton from "./components/ui/loading-button";
 import { useNavigate } from "react-router-dom";
 
 const InterviewSimulation: React.FC = () => {
-  const [user, fetchUser] = useUser();
+  const [user] = useUser();
   const [open, setOpen] = useState(false);
   const [jobTitle, setJobTitle] = useState<string>("");
   const [loadingQuestions, setLoadingQuestions] = useState(true);

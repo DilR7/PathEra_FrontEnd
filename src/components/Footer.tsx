@@ -31,9 +31,6 @@ const Footer: React.FC = () => {
                 Jobs
               </a>
               <a href="#" className="text-sm hover:text-gray-600">
-                CV Grading
-              </a>
-              <a href="#" className="text-sm hover:text-gray-600">
                 Interview Simulation
               </a>
             </div>

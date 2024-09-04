@@ -156,7 +156,7 @@ const Assessment: React.FC = () => {
   };
 
   const handleContinue = () => {
-    navigate("/jobrecommendation");
+    navigate("/jobs");
   };
 
   return (

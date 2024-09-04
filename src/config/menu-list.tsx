@@ -2,11 +2,13 @@ import Login from "@/Login";
 import Register from "@/Register";
 import Home from "@/Home";
 import Assessment from "@/Assessment";
-import JobRecommendation from "@/JobRecommendation";
+import JobPage from "@/JobPage";
 import JobDetail from "@/JobDetail";
 import InterviewSimulation from "@/InterviewSimulation";
 import Results from "@/Results";
 import History from "@/History";
+import JobMatches from "@/Recommendations";
+import Recommendations from "@/Recommendations";
 
 export type PageType = {
   name: string;
@@ -47,8 +49,8 @@ export const PAGES: PageType[] = [
   },
   {
     name: "Jobs",
-    path: "/jobrecommendation",
-    element: <JobRecommendation />,
+    path: "/jobs",
+    element: <JobPage />,
   },
   {
     name: "Interview Simulation",
@@ -66,6 +68,12 @@ export const PAGES: PageType[] = [
     name: "History",
     path: "/history",
     element: <History />,
+    isAuth: true,
+  },
+  {
+    name: "Job Recommendations",
+    path: "/recommendations",
+    element: <Recommendations />,
     isAuth: true,
   },
 ];
