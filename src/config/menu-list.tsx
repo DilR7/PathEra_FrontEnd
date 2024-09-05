@@ -7,7 +7,6 @@ import JobDetail from "@/JobDetail";
 import InterviewSimulation from "@/InterviewSimulation";
 import Results from "@/Results";
 import History from "@/History";
-import JobMatches from "@/Recommendations";
 import Recommendations from "@/Recommendations";
 
 export type PageType = {

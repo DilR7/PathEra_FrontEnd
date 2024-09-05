@@ -2,8 +2,9 @@ import React, { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { HiInformationCircle } from "react-icons/hi2";
 import MainLayout from "./layout/MainLayout";
 import axios from "axios";
-import { BASE_URL } from "./config/settings";
+import { BASE_URL, FLASK_URL } from "./config/settings";
 import { SkillType } from "./types/SkillType";
+import { useUser } from "./context/UserContext";
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import {
   AlertDialog,
@@ -20,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 
 const Assessment: React.FC = () => {
   useSmoothScroll();
+  const [user] = useUser();
   const [skills, setSkills] = useState<SkillType[]>([]);
   const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
@@ -120,23 +122,23 @@ const Assessment: React.FC = () => {
     setAbortController(controller);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      // await axios.post(
-      //   `${BASE_URL}/submit`,
-      //   {
-      //     selectedJobTitles,
-      //     experience,
-      //     selectedSkills,
-      //     degree,
-      //     selectedExperiences,
-      //   },
-      //   {
-      //     signal: controller.signal,
-      //   }
-      // );
+      console.log(selectedSkills.join(","));
+      const response = await axios.post(
+        `${FLASK_URL}/recommend`,
+        {
+          user_id: user?.id,
+          job_title: selectedJobTitles.join(","),
+          years_of_experience: experience,
+          skills: selectedSkills.join(","),
+          degree,
+        },
+        {
+          signal: controller.signal,
+        }
+      );
 
       setSubmissionComplete(true);
+      localStorage.setItem("recommendations", JSON.stringify(response.data));
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log("Submission canceled");
@@ -156,7 +158,7 @@ const Assessment: React.FC = () => {
   };
 
   const handleContinue = () => {
-    navigate("/jobs");
+    navigate("/recommendations");
   };
 
   return (
