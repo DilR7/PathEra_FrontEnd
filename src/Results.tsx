@@ -52,7 +52,7 @@ const Results = () => {
         if (error.response.status === 404) {
           toastError("Session not found");
         } else if (error.response.status === 403) {
-          navigate("/home");
+          navigate("/");
           toastError("Unauthorized");
         } else {
           toastError("An error occurred. Please try again later");

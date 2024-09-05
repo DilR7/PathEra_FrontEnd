@@ -137,10 +137,10 @@ const Home = () => {
         </div>
         <div className="font-medium text-xl my-8 w-full flex justify-center">
           <Button
-            onClick={() => navigate("/assessment")}
+            onClick={() => navigate("/jobs")}
             className="min-w-[300px] w-1/5 py-8 text-lg"
           >
-            Find jobs for me
+            Show More
           </Button>
         </div>
       </div>

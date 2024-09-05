@@ -36,7 +36,7 @@ const Recommendations = () => {
         );
       }
     } else {
-      navigate("/home");
+      navigate("/");
     }
   }, []);
 

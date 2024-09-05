@@ -33,7 +33,7 @@ export const PAGES: PageType[] = [
   },
   {
     name: "Home",
-    path: "/home",
+    path: "/",
     element: <Home />,
   },
   {

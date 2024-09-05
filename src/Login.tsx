@@ -35,7 +35,7 @@ function Login() {
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);
         fetchUser();
-        navigate("/home");
+        navigate("/");
       }
     } catch (error: any) {
       console.log(error.response.data);

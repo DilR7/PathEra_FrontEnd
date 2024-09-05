@@ -65,9 +65,9 @@ const Header: React.FC = () => {
         <div className="flex justify-between h-20 items-center">
           <div className="flex-shrink-0">
             <Link
-              to="/home"
+              to="/"
               className={`text-primary-foreground font-bold text-2xl hover:text-gray-700 ${
-                location.pathname === "/home" ? "text-gray-700" : ""
+                location.pathname === "/" ? "text-gray-700" : ""
               }`}
             >
               PathEra
@@ -85,9 +85,9 @@ const Header: React.FC = () => {
 
           <div className="hidden lg:flex items-center space-x-8">
             <Link
-              to="/home"
+              to="/"
               className={`hover:text-gray-700 ${
-                location.pathname === "/home"
+                location.pathname === "/"
                   ? "font-bold text-primary-foreground"
                   : "text-primary-foreground"
               }`}
@@ -182,9 +182,9 @@ const Header: React.FC = () => {
           >
             <div className="pt-2 pb-3 space-y-1">
               <Link
-                to="/home"
+                to="/"
                 className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 px-4 py-2 ${
-                  location.pathname === "/home"
+                  location.pathname === "/"
                     ? "border-l-4 border-primary bg-gray-100"
                     : ""
                 }`}

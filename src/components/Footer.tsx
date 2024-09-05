@@ -1,6 +1,4 @@
 import React from "react";
-import InstagramIcon from "../assets/instagram__icon.png";
-import { Input } from "./ui/input";
 import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
