@@ -8,6 +8,7 @@ import InterviewSimulation from "@/InterviewSimulation";
 import Results from "@/Results";
 import History from "@/History";
 import Recommendations from "@/Recommendations";
+import SavedJobs from "@/SavedJobs";
 
 export type PageType = {
   name: string;
@@ -73,6 +74,12 @@ export const PAGES: PageType[] = [
     name: "Job Recommendations",
     path: "/recommendations",
     element: <Recommendations />,
+    isAuth: true,
+  },
+  {
+    name: "Saved Jobs",
+    path: "/saved-jobs",
+    element: <SavedJobs />,
     isAuth: true,
   },
 ];

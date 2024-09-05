@@ -2,22 +2,76 @@ import HeroImage from "./assets/Hero__image.png";
 import { Button } from "./components/ui/button";
 import StatisticsCard from "./components/StatisticsCard";
 import VerticalUnderline from "./components/VerticalUnderline";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-} from "./components/ui/card";
-import { LIST_JOBS } from "./data/listJob";
-import cvGrading from "./assets/CvGrading__Image.png";
+import { BASE_URL } from "./config/settings";
 import AiInterview from "./assets/AiInterview__Image.png";
 import MainLayout from "./layout/MainLayout";
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import { useNavigate } from "react-router-dom";
+import { JobType } from "./types/JobTypes";
+import { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import JobCard from "./components/JobCard";
+import JobSkeleton from "./components/JobSkeleton";
+import { useTypewriter, Cursor } from "react-simple-typewriter";
 
 const Home = () => {
   useSmoothScroll();
+
+  const [jobs, setJobs] = useState<JobType[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [revealedJobs, setRevealedJobs] = useState<number[]>([]);
   const navigate = useNavigate();
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  const [text] = useTypewriter({
+    words: ["Find Jobs For You", "Get Hired", "Ace Your Interview"],
+    loop: true,
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${BASE_URL}/featured`);
+        console.log(response.data);
+        setJobs(response.data);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (!loading && jobs) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            jobs.forEach((_, index) => {
+              setTimeout(() => {
+                setRevealedJobs((prevRevealed) => [...prevRevealed, index]);
+              }, index * 150);
+            });
+          }
+        },
+        {
+          threshold: 0.3,
+        }
+      );
+
+      if (sectionRef.current) {
+        observer.observe(sectionRef.current);
+      }
+
+      return () => {
+        if (sectionRef.current) {
+          observer.unobserve(sectionRef.current);
+        }
+      };
+    }
+  }, [loading, jobs]);
 
   return (
     <MainLayout overflowHidden={true}>
@@ -31,14 +85,17 @@ const Home = () => {
         </div>
 
         <div className="w-full flex flex-col items-center md:w-1/2 text-center sm:p-12 p-8 lg:p-2">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-relaxed">
-            Unleash Your Career With{" "}
-            <span className="text-sky-50">PathEra</span>
+          <h1 className="text-4xl text-white lg:text-5xl font-bold mb-4 leading-relaxed">
+            Work Smarter, Get Hired with{" "}
+            <span className="text-black">PathEra</span>
+          </h1>
+          <h1 className="text-sky-600 text-3xl lg:text-4xl font-bold mb-4 leading-relaxed">
+            {text}
+            <span className="text-sky-600">
+              <Cursor />
+            </span>
           </h1>
           <img src={HeroImage} className="w-3/4 h-auto md:hidden" alt="Hero" />
-          {/* <Button className="w-full text-lg md:w-60 mt-6" variant={"black"}>
-            Join Us
-          </Button> */}
         </div>
       </div>
 
@@ -52,22 +109,31 @@ const Home = () => {
         <StatisticsCard title="Companies" value="50+" />
       </div>
 
-      <div className="flex flex-col justify-center items-center px-12 bg-mariner-50 py-8">
+      <div
+        ref={sectionRef}
+        className="flex flex-col justify-center items-center px-12 bg-mariner-50 py-8"
+      >
         <h1 className="font-bold text-3xl my-8">
           Find <span className="text-primary">jobs</span> based on your skills
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-          {LIST_JOBS.map((job, index) => (
-            <Card key={index}>
-              <CardHeader
-                imageSrc={job.imageSrc}
-                company={job.company}
-                role={job.role}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 w-full">
+          {loading &&
+            !jobs &&
+            Array.from({ length: 9 }).map((_, index) => (
+              <JobSkeleton key={index} />
+            ))}
+          {jobs &&
+            jobs.map((job, index) => (
+              <JobCard
+                className={`transition-all duration-500 ease-out ${
+                  revealedJobs.includes(index)
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                }`}
+                key={job.id}
+                job={job}
               />
-              <CardContent tags={job.tags} />
-              <CardFooter rate={job.rate} postedDate={job.postedDate} />
-            </Card>
-          ))}
+            ))}
         </div>
         <div className="font-medium text-xl my-8 w-full flex justify-center">
           <Button
@@ -79,37 +145,18 @@ const Home = () => {
         </div>
       </div>
 
-      {/* <div className="pt-1 flex flex-col justify-center items-center min-h-screen px-14 bg-gradient-to-r from-violet-200 to-sky-200">
-        <h1 className="pb-5 font-bold text-3xl pt-5 md:pt-5 lg:pt-3">
-          CV <span className="text-primary">Grading</span>
-        </h1>
-        <div className="pt-10 flex flex-col md:flex-row justify-center md:justify-between items-center">
-          <img
-            src={cvGrading}
-            className="w-full md:w-3/4 lg:w-2/4 h-auto"
-            alt="Hero"
-          />
-          <div className="w-full md:w-1/2 text-center sm:p-16 p-8 lg:p-2">
-            <h1 className="text-xl font-bold mb-2">
-              Receive immediate, professional comments on your resume.
-            </h1>
-            <Button type="submit" className="w-60 mt-6" variant={"black"}>
-              Join Us
-            </Button>
-          </div>
-        </div>
-      </div> */}
-
       <div className=" flex flex-col justify-center items-center min-h-screen px-14 bg-white">
         <div className=" flex flex-col md:flex-row justify-center md:justify-between items-center">
           <img
             src={AiInterview}
-            className="w-full md:w-3/4 lg:w-9/12 h-auto"
+            className="w-full md:max-w-[60%] lg:max-w-[50%] h-auto"
             alt="Hero"
           />
           <div className="w-full md:w-1/2 text-center sm:p-16 p-8 lg:p-2">
             <h1 className="text-xl font-bold mb-2">
-              Preparing for interview? Use our AI simulate interviews
+              Getting ready for your next big interview? Enhance your
+              preparation with our AI-powered simulated interviews to practice
+              and refine your skills.
             </h1>
             <Button
               onClick={() => navigate("/interview")}
@@ -122,33 +169,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      {/* <div className="flex flex-col justify-center items-center min-h-screen px-4 sm:px-8 md:px-14 bg-primary">
-        <div className="flex flex-col md:flex-row w-full justify-center md:justify-between items-center">
-          <div className="w-full md:w-1/2 flex flex-col justify-evenly text-start p-4 sm:p-8 lg:p-12">
-            <p className="text-lg sm:text-xl font-bold mb-2">Review</p>
-            <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-2">
-              What Our Customer Say About Us
-            </h1>
-            <h1 className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-              “
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl">
-              Aku keterima di perusahaan Google karena menggunakan simulasi
-              training AI dari aplikasi ini, terima kasih PathEra, aplikasi ini
-              sangat membantu.
-            </p>
-            <p className="text-base sm:text-lg md:text-xl lg:text-xl text-center mt-4">
-              Eric Tianto
-            </p>
-          </div>
-          <img
-            src={ProfilePicture}
-            className="rounded-xl w-48 h-auto md:w-80 mt-4 mb-4 md:mt-0"
-            alt="Profile"
-          />
-        </div>
-      </div> */}
     </MainLayout>
   );
 };

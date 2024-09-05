@@ -26,17 +26,16 @@ const Assessment: React.FC = () => {
   const [skills, setSkills] = useState<SkillType[]>([]);
   const [selectedJobTitles, setSelectedJobTitles] = useState<string[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [selectedExperiences, setSelectedExperiences] = useState<string[]>([]);
   const [inputValueJobTitles, setInputValueJobTitles] = useState<string>("");
   const [inputValueSkills, setInputValueSkills] = useState<string>("");
-  const [inputValueExperience, setInputValueExperience] = useState<string>("");
   const [degree, setDegree] = useState<string>("No Degree");
   const [suggestionsSkills, setSuggestionsSkills] = useState<SkillType[]>([]);
   const [experience, setExperience] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionComplete, setSubmissionComplete] = useState<boolean>(false);
-  const [abortController, setAbortController] =
-    useState<AbortController | null>(null);
+  const [errorJobTitle, setErrorJobTitle] = useState<string | null>(null);
+  const [errorSkills, setErrorSkills] = useState<string | null>(null);
+  const [, setAbortController] = useState<AbortController | null>(null);
   const navigate = useNavigate();
 
   const handleInputChangeJobTitles = (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,11 +55,10 @@ const Assessment: React.FC = () => {
     }
   };
 
-  const handleInputChangeExperiences = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputValueExperience(e.target.value);
-  };
-
   const handleAddJobTitle = () => {
+    if (errorJobTitle) {
+      setErrorJobTitle(null);
+    }
     if (inputValueJobTitles.trim() !== "" && inputValueJobTitles.length > 2) {
       setSelectedJobTitles((prev) => [...prev, inputValueJobTitles]);
       setInputValueJobTitles("");
@@ -68,17 +66,13 @@ const Assessment: React.FC = () => {
   };
 
   const handleAddSkill = (skill: string) => {
+    if (errorSkills) {
+      setErrorSkills(null);
+    }
     if (!selectedSkills.includes(skill)) {
       setSelectedSkills((prev) => [...prev, skill]);
       setInputValueSkills("");
       setSuggestionsSkills([]);
-    }
-  };
-
-  const handleAddExperience = () => {
-    if (inputValueExperience.trim() !== "") {
-      setSelectedExperiences((prev) => [...prev, inputValueExperience]);
-      setInputValueExperience("");
     }
   };
 
@@ -91,14 +85,6 @@ const Assessment: React.FC = () => {
   const handleRemoveTitleSkills = (skill: string) => {
     setSelectedSkills(
       selectedSkills.filter((skillTitle) => skillTitle !== skill)
-    );
-  };
-
-  const handleRemoveExperiences = (experience: string) => {
-    setSelectedExperiences(
-      selectedExperiences.filter(
-        (experienceTitle) => experienceTitle !== experience
-      )
     );
   };
 
@@ -116,15 +102,19 @@ const Assessment: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setSubmissionComplete(false);
+    setErrorJobTitle(null);
+    setErrorSkills(null);
 
     const controller = new AbortController();
     setAbortController(controller);
-
+    if (selectedJobTitles.length === 0) {
+      setErrorJobTitle("Please add at least one job title.");
+      return;
+    }
+    setIsSubmitting(true);
+    setSubmissionComplete(false);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
+      console.log(degree);
       const response = await axios.post(
         `${FLASK_URL}/recommend`,
         {
@@ -138,9 +128,11 @@ const Assessment: React.FC = () => {
           signal: controller.signal,
         }
       );
+      const matches = response.data.result.slice(0, 15);
+      localStorage.setItem("recommendations", JSON.stringify(matches));
       localStorage.setItem(
-        "recommendations",
-        JSON.stringify(response.data.result.slice(0, 15))
+        "skill_matches",
+        JSON.stringify(response.data.skill_matches.slice(0, 15))
       );
       sessionStorage.setItem("animate", "true");
       setSubmissionComplete(true);
@@ -153,13 +145,6 @@ const Assessment: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleCancel = () => {
-    if (abortController) {
-      abortController.abort();
-    }
-    setIsSubmitting(false);
   };
 
   const handleContinue = () => {
@@ -202,6 +187,11 @@ const Assessment: React.FC = () => {
                   Add
                 </button>
               </div>
+              {errorJobTitle && (
+                <div className="text-red-600 text-md mt-2 font-bold">
+                  {errorJobTitle}
+                </div>
+              )}
               <div className="flex flex-wrap gap-2 mt-2">
                 {selectedJobTitles.map((title) => (
                   <span
@@ -245,6 +235,9 @@ const Assessment: React.FC = () => {
                 className="w-full p-2 text-black rounded-l-md border border-r-0 border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300"
               />
             </div>
+            {errorSkills && (
+              <div className="text-red-600 text-md mt-2">{errorSkills}</div>
+            )}
             {suggestionsSkills.length > 0 && (
               <ul className="absolute z-10 bg-white text-black w-72 sm:w-96 max-w-96 border border-gray-300 rounded mt-1 max-h-60 overflow-y-scroll">
                 {suggestionsSkills.map((skill) => (
@@ -368,16 +361,9 @@ const Assessment: React.FC = () => {
               )}
             </AlertDialogDescription>
             <AlertDialogFooter>
-              {submissionComplete ? (
+              {submissionComplete && (
                 <AlertDialogAction onClick={handleContinue}>
                   Continue
-                </AlertDialogAction>
-              ) : (
-                <AlertDialogAction
-                  className="bg-red-600 hover:bg-red-500"
-                  onClick={handleCancel}
-                >
-                  Cancel Submission
                 </AlertDialogAction>
               )}
             </AlertDialogFooter>

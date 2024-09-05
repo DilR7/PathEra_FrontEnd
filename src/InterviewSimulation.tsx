@@ -29,7 +29,6 @@ const InterviewSimulation: React.FC = () => {
   const [loadingTranscription, setLoadingTranscription] = useState(false);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [currentScore, setCurrentScore] = useState<number | null>(null);
-  const [currentFeedback, setCurrentFeedback] = useState<string | null>(null);
   const [showScore, setShowScore] = useState(false);
   const [scoreVisible, setScoreVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -37,7 +36,6 @@ const InterviewSimulation: React.FC = () => {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState<string[]>([]);
   const [scores, setScores] = useState<number[]>([]);
-  const [feedback, setFeedback] = useState<string[]>([]);
 
   const {
     isRecording,
@@ -89,7 +87,6 @@ const InterviewSimulation: React.FC = () => {
     setLoadingQuestions(true);
     try {
       const response = await axios.get(`${BASE_URL}/questions/${title}`);
-      console.log("Questions:", response.data);
       setQuestions(response.data);
       sessionStorage.setItem("questions", JSON.stringify(response.data));
       setCurrentQuestion(0);
@@ -146,7 +143,6 @@ const InterviewSimulation: React.FC = () => {
       });
       console.log("Response:", response.data);
       setCurrentScore(response.data.score);
-      setCurrentFeedback("Test feedback");
       setAnswers((prev) => [...prev, transcription || "No answer"]);
       setScores((prev) => [...prev, response.data.score]);
     } catch (error) {
@@ -187,18 +183,20 @@ const InterviewSimulation: React.FC = () => {
     try {
       setIsSubmitting(true);
       console.log(questions?.map((q) => q.sample_answer));
+      console.log(answers, scores);
       const response = await axios.post(`${BASE_URL}/save-session`, {
         userId: user.id,
         jobTitle,
         answers,
         scores,
-        feedback,
         questions: questions?.map((q) => ({
           id: q.id,
         })),
         sample_answers: questions?.map((q) => q.sample_answer),
       });
       if (response.status === 200) {
+        sessionStorage.removeItem("questions");
+        localStorage.removeItem("selectedJobTitle");
         navigate(`/results/${response.data.id}`);
       }
     } catch (error) {
@@ -320,6 +318,8 @@ const InterviewSimulation: React.FC = () => {
         setOpen={setOpen}
         onSelectJob={handleSelectJob}
       />
+      <br />
+      <br />
     </MainLayout>
   );
 };

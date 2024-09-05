@@ -6,13 +6,16 @@ import { useNavigate } from "react-router-dom";
 
 interface JobCardProps {
   job: JobType;
+  className?: string;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ job }) => {
+const JobCard: React.FC<JobCardProps> = ({ job, className = "" }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="border border-gray-200 rounded-lg shadow-md p-4 w-full bg-white flex flex-col gap-2 justify-between">
+    <div
+      className={`border border-gray-200 rounded-lg shadow-md p-4 w-full bg-white flex flex-col gap-2 justify-between ${className}`}
+    >
       <div className="flex flex-col">
         <div className="flex items-start mb-2 gap-3">
           {job.companyId.company_image ? (

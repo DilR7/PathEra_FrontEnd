@@ -11,7 +11,11 @@ const MainLayout = ({ children, overflowHidden = false }: MainLayoutProps) => {
   return (
     <>
       <Header />
-      <div className={`mt-20 ${overflowHidden ? "overflow-x-hidden" : ""}`}>
+      <div
+        className={`mt-20 ${
+          overflowHidden ? "overflow-x-hidden" : ""
+        }`}
+      >
         {children}
       </div>
       <Toaster />

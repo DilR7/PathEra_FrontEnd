@@ -1,6 +1,7 @@
 import React from "react";
 import InstagramIcon from "../assets/instagram__icon.png";
 import { Input } from "./ui/input";
+import { Link } from "react-router-dom";
 
 const Footer: React.FC = () => {
   return (
@@ -12,27 +13,22 @@ const Footer: React.FC = () => {
         <div className="flex flex-col lg:flex-row justify-between gap-8">
           <div className="flex flex-col">
             <p className="text-xl font-semibold">PathEra</p>
-            <div className="flex gap-2 mt-2">
-              <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
-              <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
-              <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
-              <img src={InstagramIcon} className="w-6 h-6" alt="Instagram" />
-            </div>
+
             <p className="mt-5 text-sm">
               &copy; 2024 PathEra. All rights reserved
             </p>
           </div>
           <div className="flex flex-col lg:flex-col gap-8">
             <div className="flex flex-col lg:flex-row gap-6">
-              <a href="#" className="text-sm hover:text-gray-600">
+              <Link to="/" className="text-sm hover:text-gray-600">
                 Home
-              </a>
-              <a href="#" className="text-sm hover:text-gray-600">
+              </Link>
+              <Link to="/jobs" className="text-sm hover:text-gray-600">
                 Jobs
-              </a>
-              <a href="#" className="text-sm hover:text-gray-600">
+              </Link>
+              <Link to="/interview" className="text-sm hover:text-gray-600">
                 Interview Simulation
-              </a>
+              </Link>
             </div>
             <div className="mt-5  lg:mt-0 border-2 flex rounded-full border-black overflow-hidden">
               <input

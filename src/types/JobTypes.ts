@@ -22,3 +22,21 @@ export type CompanyType = {
   company_name: string;
   company_image: string;
 };
+
+export type JobDetailType = {
+  id: number;
+  jobTitle: string;
+  jobType: string;
+  jobLevel: string;
+  jobModel: string;
+  location: string;
+  minExperience: number;
+  skillsRequired: string[];
+  industry: string;
+  degree: string;
+  companyName: string;
+  companyImage: string;
+  isSaved: boolean;
+  jobDescription: string;
+  createdAt: string;
+};

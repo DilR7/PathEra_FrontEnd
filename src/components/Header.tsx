@@ -31,9 +31,8 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if there are recommendations in localStorage
     const recommendations = localStorage.getItem("recommendations");
-    setHasRecommendations(!!recommendations); // Set to true if recommendations exist
+    setHasRecommendations(!!recommendations);
   }, []);
 
   const handleLogout = async () => {
@@ -50,7 +49,7 @@ const Header: React.FC = () => {
       );
       if (response.status === 200) {
         localStorage.removeItem("token");
-        localStorage.removeItem("questions");
+        sessionStorage.removeItem("questions");
         localStorage.removeItem("selectedJobTitle");
         localStorage.removeItem("recommendations");
         fetchUser();
@@ -148,12 +147,6 @@ const Header: React.FC = () => {
                   <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile">
-                      <User className="mr-2 h-4 w-4" />
-                      <span className="text-md">Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
                     <Link to="/saved-jobs">
                       <BriefcaseBusiness className="mr-2 h-4 w-4" />
                       <span className="text-md">Saved Jobs</span>
@@ -235,17 +228,6 @@ const Header: React.FC = () => {
 
               {user && (
                 <>
-                  <Link
-                    to="/profile"
-                    className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 px-4 py-2 ${
-                      location.pathname === "/profile"
-                        ? "border-l-4 border-primary bg-gray-100"
-                        : ""
-                    }`}
-                  >
-                    <User className="inline mr-2 h-4 w-4" />
-                    Profile
-                  </Link>
                   <Link
                     to="/saved-jobs"
                     className={`block text-gray-900 hover:text-gray-700 hover:bg-gray-100 px-4 py-2 ${

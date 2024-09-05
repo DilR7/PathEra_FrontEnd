@@ -1,6 +1,6 @@
 const LoadingIcon = ({ color = "#0EA5E9" }: { color?: string }) => {
   const rectSize = 60;
-  const spacing = 30; // space between rectangles
+  const spacing = 30;
   const viewBoxWidth = 3 * rectSize + 2 * spacing;
   const viewBoxHeight = 2 * rectSize;
 

@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import amazonLogo from "./assets/amazon__icon.png";
 import MainLayout from "./layout/MainLayout";
 import {
+  FaCheckCircle,
   FaExternalLinkAlt,
   FaHeart,
   FaRegHeart,
-  FaCheckCircle,
-} from "react-icons/fa"; // Updated import
-import { AiFillCloseCircle } from "react-icons/ai";
-import { HiOutlineLocationMarker } from "react-icons/hi";
+} from "react-icons/fa";
 import { PiDotOutlineFill } from "react-icons/pi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   GraduationCap,
   BriefcaseBusiness,
@@ -23,25 +20,57 @@ import {
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import { formatPostDate } from "./lib/utils";
 import { Button } from "./components/ui/button";
+import { JobDetailType } from "./types/JobTypes";
+import { useUser } from "./context/UserContext";
+import { BASE_URL } from "./config/settings";
+import { RawSkillMatches, SkillMatchesType } from "./types/SkillType";
+import { AiFillCloseCircle } from "react-icons/ai";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams();
+  if (!id) {
+    return <div>Invalid Job ID</div>;
+  }
+  const [user] = useUser();
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [jobDetails, setJobDetails] = useState<any>(null);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [jobDetails, setJobDetails] = useState<JobDetailType | null>(null);
+  const navigate = useNavigate();
+  const [skillMatches, setSkillMatches] = useState<SkillMatchesType[] | null>(
+    null
+  );
 
   useSmoothScroll();
 
-  const tagStyles = [
-    { bg: "bg-purple-200", text: "text-purple-900" },
-    { bg: "bg-green-200", text: "text-green-900" },
-    { bg: "bg-orange-200", text: "text-orange-900" },
-  ];
-
   const fetchJobDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5005/jobs/${id}`);
-      console.log(response.data);
+      const response = await axios.get(`http://localhost:5005/jobs/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setIsWishlisted(response.data.isSaved);
       setJobDetails(response.data);
+      const storedSkills = localStorage.getItem("skill_matches");
+
+      if (storedSkills) {
+        const skills = JSON.parse(storedSkills);
+
+        const matchedSkills = skills.find(
+          (skill: RawSkillMatches) => skill.id === parseInt(id)
+        );
+
+        if (matchedSkills && matchedSkills.skill_matches) {
+          console.log(
+            "Matched Skills:",
+            JSON.parse(matchedSkills.skill_matches)
+          );
+          setSkillMatches(JSON.parse(matchedSkills.skill_matches));
+        } else {
+          setSkillMatches(null);
+          console.log("No skills matched for this job id.");
+        }
+      }
     } catch (error) {
       console.error("Failed to fetch job details:", error);
     }
@@ -49,10 +78,59 @@ const JobDetail: React.FC = () => {
 
   useEffect(() => {
     fetchJobDetails();
-  }, [id]);
+  }, [id, user]);
 
-  const handleWishlistClick = () => {
-    setIsWishlisted((prevState) => !prevState);
+  const handleWishlistClick = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      setLoadingSave(true);
+      if (!isWishlisted) {
+        const response = await axios.post(
+          `${BASE_URL}/save-job`,
+          {
+            job_id: id,
+            user_id: user.id,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.status === 201) {
+          setIsWishlisted(true);
+        }
+      } else {
+        const response = await axios.delete(`${BASE_URL}/remove-job`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          data: {
+            job_id: id,
+            user_id: user.id,
+          },
+        });
+        if (response.status === 200) {
+          setIsWishlisted(false);
+        }
+      }
+    } catch (error: any) {
+      console.log(error);
+    } finally {
+      setLoadingSave(false);
+    }
+  };
+
+  const isSkillMatched = (skill: string) => {
+    if (!skillMatches) {
+      return false;
+    }
+    return skillMatches.some(
+      (match) => match.matched_skill === skill.toLowerCase()
+    );
   };
 
   if (!jobDetails) {
@@ -79,11 +157,12 @@ const JobDetail: React.FC = () => {
                   </div>
                 </Button>
                 <button
+                  disabled={loadingSave}
                   onClick={handleWishlistClick}
-                  className={`text-xl border-2 border-gray rounded-xl px-2 ${
+                  className={`text-xl border-2 border-gray rounded-xl px-2 transition-all duration-200 ease-in-out ${
                     isWishlisted
                       ? "text-red-700 bg-red-300 border-red-300"
-                      : "text-gray-600"
+                      : "text-gray-600 bg-white border-gray-300"
                   }`}
                 >
                   {isWishlisted ? <FaHeart /> : <FaRegHeart />}
@@ -91,40 +170,41 @@ const JobDetail: React.FC = () => {
               </div>
             </div>
             <div className="flex items-start">
-              <div className="h-16 w-16 mr-4">
-                <img
-                  src={jobDetails.companyImage}
-                  alt={jobDetails.companyName}
-                  className="w-full h-full"
-                />
-              </div>
+              {jobDetails.companyImage && (
+                <div className="h-16 w-16 mr-4">
+                  <img
+                    src={jobDetails.companyImage}
+                    alt={jobDetails.companyName}
+                    className="w-full h-full"
+                  />
+                </div>
+              )}
               <div className="flex gap-2 flex-col justify-between">
                 <div className="flex items-center text-gray-600">
                   <h2 className="text-md text-mariner-600">
                     {jobDetails.companyName}
                   </h2>
                   <PiDotOutlineFill />
-                  <HiOutlineLocationMarker />
                   <p className="text-md">{jobDetails.location}</p>
                 </div>
                 <div className="flex gap-1">
                   {jobDetails.jobModel && (
                     <span
-                      className={`px-2 py-1 rounded-md text-xs font-semibold bg-purple-200 text-purple-900`}
+                      className={`px-3 py-1.5 rounded-md text-sm bg-purple-200 text-purple-900`}
                     >
                       {jobDetails.jobModel}
                     </span>
                   )}
                   {jobDetails.jobType && (
                     <span
-                      className={`px-2 py-1 rounded-md text-xs font-semibold bg-green-200 text-green-900`}
+                      className={`px-3 py-1.5 rounded-md text-sm bg-green-200 text-green-900`}
                     >
                       {jobDetails.jobType}
                     </span>
                   )}
                   {jobDetails.jobLevel && (
                     <span
-                      className={`px-2 py-1 rounded-md text-xs font-semibold bg-orange-200 text-orange-900`}
+                      className={`px-3 py-1.5 rounded-md text-sm bg-orange-200 text-orange-900`}
                     >
                       {jobDetails.jobLevel}
                     </span>
@@ -136,19 +216,32 @@ const JobDetail: React.FC = () => {
           <div className="bg-white p-4 rounded-lg mb-3 flex flex-col shadow">
             <h1 className="text-xl font-bold">Skills Required</h1>
             <div className="flex flex-wrap mt-2 gap-3 text-sm">
-              {jobDetails.skillsRequired.map((skill: string, index: number) => (
-                <div
-                  key={index}
-                  className="border border-black flex items-center gap-2 px-4 py-1 rounded-full hover:bg-primary hover:border-primary hover:text-white transition-all duration-500 ease-in-out select-none"
-                >
-                  {/* <FaCheckCircle className="text-green-600" size={28} />{" "} */}
-                  <span className="text-md">{skill}</span>
-                </div>
-              ))}
-              {/* <div className="border border-black flex items-center gap-2 p-1 pr-4 rounded-full">
-                <AiFillCloseCircle className="text-red-600" size={28} />
-                <span className="text-md">Unmatched Skill</span>
-              </div> */}
+              {jobDetails.skillsRequired.map((skill: string, index: number) => {
+                const isMatched = isSkillMatched(skill);
+                const skillClass = !skillMatches ? "px-2 py-2" : "p-1 pr-4";
+                const Icon = isMatched
+                  ? FaCheckCircle
+                  : skillMatches
+                  ? AiFillCloseCircle
+                  : null;
+
+                return (
+                  <div
+                    key={index}
+                    className={`border border-black flex items-center gap-2 rounded-full ${skillClass}`}
+                  >
+                    {Icon && (
+                      <Icon
+                        className={
+                          isMatched ? "text-green-600" : "text-red-600"
+                        }
+                        size={28}
+                      />
+                    )}
+                    <span>{skill}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
