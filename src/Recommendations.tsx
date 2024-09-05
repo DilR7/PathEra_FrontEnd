@@ -2,39 +2,83 @@ import MainLayout from "./layout/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { JobType } from "./types/JobTypes";
+import { JobType, RecommendationType } from "./types/JobTypes";
 import { Progress } from "./components/ui/progress";
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import { BASE_URL } from "./config/settings";
 
 const Recommendations = () => {
   useSmoothScroll();
-  const [jobs, setJobs] = useState<JobType[]>([]);
+  const [jobs, setJobs] = useState<RecommendationType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [revealedJobs, setRevealedJobs] = useState<number[]>([]);
+  const [jobIds, setJobIds] = useState<number[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+    const storedData = localStorage.getItem("recommendations");
+    if (storedData) {
       try {
-        const response = await axios.get(`${BASE_URL}/jobs`);
-        setJobs(response.data.slice(0, 15));
+        const recommendations: RecommendationType[] = JSON.parse(storedData);
+        const extractedJobIds = recommendations.map((item) => item.id);
+        fetchJobs(extractedJobIds, recommendations);
       } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+        console.error(
+          "Error parsing recommendations from local storage:",
+          error
+        );
       }
-    };
-    fetchData();
+    } else {
+      navigate("/home");
+    }
   }, []);
+
+  const fetchJobs = async (
+    jobIds: number[],
+    recommendations: RecommendationType[]
+  ) => {
+    setLoading(true);
+    try {
+      if (jobIds.length > 0) {
+        const response = await axios.get(`${BASE_URL}/get-recommendations`, {
+          params: {
+            ids: jobIds.join(","),
+          },
+        });
+
+        const combinedData = response.data.map((job: JobType) => {
+          const recommendation = recommendations.find(
+            (rec) => rec.id === job.id
+          );
+          return {
+            ...job,
+            ...recommendation,
+          };
+        });
+
+        const sortedData = combinedData.sort(
+          (a: RecommendationType, b: RecommendationType) =>
+            b.similarity - a.similarity
+        );
+
+        console.log(sortedData);
+        setJobs(sortedData);
+      } else {
+        setJobs([]);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!loading) {
       jobs.forEach((_, index) => {
         setTimeout(() => {
           setRevealedJobs((prevRevealed) => [...prevRevealed, index]);
-        }, index * 180);
+        }, index * 120);
       });
     }
   }, [loading, jobs]);
@@ -44,10 +88,13 @@ const Recommendations = () => {
       <br />
       <br />
       <div className="flex flex-col items-center gap-4 px-8">
-        <h1 className="text-center text-3xl">Here are the job results</h1>
+        <h1 className="text-center text-3xl">
+          Recommended Job Opportunities for You
+        </h1>
         <p className="text-center">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore amet
-          aliquam necessitatibus sapiente iste, repellendus ad nisi
+          Based on your profile and preferences, we have curated a list of job
+          recommendations tailored just for you. Explore and find your next
+          career opportunity!
         </p>
       </div>
       <br />
@@ -109,11 +156,14 @@ const Recommendations = () => {
             <div className="flex flex-col justify-between mt-auto gap-1">
               <div className="flex items-center gap-2">
                 <span className="text-md font-medium">Similarity:</span>
-                <span className="text-md font-semibold text-[#109932]">
-                  {100}%
+                <span className="text-md font-semibold text-primary">
+                  {job.similarity.toFixed(2)} %
                 </span>
               </div>
-              <Progress value={80} className="h-1.5 w-full bg-gray-300" />
+              <Progress
+                value={job.similarity}
+                className="h-1.5 w-full bg-gray-300"
+              />
             </div>
           </div>
         ))}

@@ -32,7 +32,6 @@ const Results = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
         const response = await axios.get(`${BASE_URL}/get-session/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -129,10 +128,6 @@ const Results = () => {
                         Your answer
                       </p>
                       <p className="mt-1 sm:mt-2">{answer.answer}</p>
-                      <p className="font-bold sm:text-lg md:text-xl mt-4">
-                        Feedback
-                      </p>
-                      <p className="mt-1 sm:mt-2">{answer.feedback}</p>
                       <p className="font-bold text-sm sm:text-lg md:text-xl mt-4">
                         Sample Answer
                       </p>

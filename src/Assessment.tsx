@@ -4,7 +4,6 @@ import MainLayout from "./layout/MainLayout";
 import axios from "axios";
 import { BASE_URL, FLASK_URL } from "./config/settings";
 import { SkillType } from "./types/SkillType";
-import { useUser } from "./context/UserContext";
 import useSmoothScroll from "./hooks/useSmoothScroll";
 import {
   AlertDialog,
@@ -18,6 +17,8 @@ import {
 import { RadioGroup, RadioGroupItem } from "./components/ui/radio-group";
 import LoadingIcon from "./components/LoadingIcon";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "./context/UserContext";
+import { Button } from "./components/ui/button";
 
 const Assessment: React.FC = () => {
   useSmoothScroll();
@@ -122,7 +123,8 @@ const Assessment: React.FC = () => {
     setAbortController(controller);
 
     try {
-      console.log(selectedSkills.join(","));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       const response = await axios.post(
         `${FLASK_URL}/recommend`,
         {
@@ -136,9 +138,12 @@ const Assessment: React.FC = () => {
           signal: controller.signal,
         }
       );
-
+      localStorage.setItem(
+        "recommendations",
+        JSON.stringify(response.data.result.slice(0, 15))
+      );
+      sessionStorage.setItem("animate", "true");
       setSubmissionComplete(true);
-      localStorage.setItem("recommendations", JSON.stringify(response.data));
     } catch (error) {
       if (axios.isCancel(error)) {
         console.log("Submission canceled");
@@ -333,54 +338,13 @@ const Assessment: React.FC = () => {
               </div>
             </RadioGroup>
           </div>
-          <div className="mb-6">
-            <label className="block text-lg font-semibold mb-2">
-              Your Experiences
-            </label>
-            <div className="relative flex">
-              <input
-                type="text"
-                value={inputValueExperience}
-                onChange={handleInputChangeExperiences}
-                placeholder="Created an application that uses AI for talent growth"
-                className="w-full p-2 text-black rounded-l-md border border-r-0 border-gray-300 focus:outline-none focus:ring-0 focus:border-gray-300"
-              />
-              <button
-                type="button"
-                onClick={handleAddExperience}
-                className="px-4 py-2 bg-white text-primary font-semibold rounded-r-md border border-gray-300 hover:bg-gray-200 transition-colors duration-300"
-              >
-                Add
-              </button>
-            </div>
-            <div className="mt-2">
-              {selectedExperiences.map((experience) => (
-                <div
-                  key={experience}
-                  className="flex justify-between mt-2 bg-white w-full text-black py-1 px-3 rounded-sm cursor-pointer items-center"
-                  style={{
-                    overflowWrap: "break-word",
-                    wordBreak: "break-word",
-                  }}
-                >
-                  {experience}
-                  <span
-                    onClick={() => handleRemoveExperiences(experience)}
-                    className="ml-1 text-red-500 font-bold cursor-pointer"
-                  >
-                    &times;
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
           <div className="flex justify-center w-full">
-            <button
+            <Button
               type="submit"
-              className="bg-primary text-white text-center py-2 px-4 rounded hover:bg-primary/90 transition-all duration-300 hover:text-white/60"
+              className="bg-white text-primary hover:bg-white/90 text-center py-2 px-4 rounded hover:text-primary transition-all duration-300"
             >
               Submit Job Questionnaire
-            </button>
+            </Button>
           </div>
         </form>
 

@@ -32,17 +32,6 @@ function App() {
                   }
                 />
               ))}
-              {/* <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/assessment" element={<Assessment />} />
-              <Route
-                path="/jobrecommendation"
-                element={<JobRecommendation />}
-              />
-              <Route path="/jobdetail/:id?" element={<JobDetail />} />
-              <Route path="/interview" element={<InterviewSimulation />} />
-              <Route path="/results/:id" element={<Results />} /> */}
             </Routes>
           </ToastProvider>
         </JobProvider>

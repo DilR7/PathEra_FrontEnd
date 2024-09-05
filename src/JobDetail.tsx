@@ -67,7 +67,12 @@ const JobDetail: React.FC = () => {
             <div className="flex justify-between items-center mb-2">
               <h1 className="md:text-2xl font-bold">{jobDetails.jobTitle}</h1>
               <div className="flex gap-4">
-                <Button className="bg-mariner-800 text-white px-4 py-1.5 rounded-xl font-semibold flex items-center gap-3 hover:bg-mariner-900">
+                <Button
+                  onClick={() =>
+                    (window.location.href = `https://www.linkedin.com/jobs/view/${id}/`)
+                  }
+                  className="bg-mariner-800 text-white px-4 py-1.5 rounded-xl font-semibold flex items-center gap-3 hover:bg-mariner-900"
+                >
                   <p>Apply Now</p>
                   <div className="text-xs">
                     <FaExternalLinkAlt />
@@ -85,20 +90,22 @@ const JobDetail: React.FC = () => {
                 </button>
               </div>
             </div>
-            <div className="flex items-center h-12">
-              <img
-                src={amazonLogo}
-                alt={jobDetails.companyName}
-                className="w-12 ml-2 mr-6"
-              />
-              <div className="flex gap-3 flex-col">
+            <div className="flex items-start">
+              <div className="h-16 w-16 mr-4">
+                <img
+                  src={jobDetails.companyImage}
+                  alt={jobDetails.companyName}
+                  className="w-full h-full"
+                />
+              </div>
+              <div className="flex gap-2 flex-col justify-between">
                 <div className="flex items-center text-gray-600">
-                  <h2 className="text-sm text-mariner-600">
+                  <h2 className="text-md text-mariner-600">
                     {jobDetails.companyName}
                   </h2>
                   <PiDotOutlineFill />
                   <HiOutlineLocationMarker />
-                  <p className="text-sm">{jobDetails.location}</p>
+                  <p className="text-md">{jobDetails.location}</p>
                 </div>
                 <div className="flex gap-1">
                   {jobDetails.jobModel && (

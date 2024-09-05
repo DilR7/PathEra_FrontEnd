@@ -9,6 +9,14 @@ export type JobType = {
   createdAt: string;
 };
 
+export type RecommendationType = JobType & {
+  similarity: number;
+  skill_score: number;
+  title_score: number;
+  degree_score: number;
+  experience_score: number;
+};
+
 export type CompanyType = {
   id: number;
   company_name: string;

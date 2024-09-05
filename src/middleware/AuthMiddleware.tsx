@@ -22,7 +22,7 @@ const AuthMiddleware = ({ children }: PropsWithChildren) => {
   }, []);
 
   if (loading) {
-    return null; // or a loading indicator
+    return null;
   }
 
   if (user === null) {

@@ -149,7 +149,6 @@ const InterviewSimulation: React.FC = () => {
       setCurrentFeedback("Test feedback");
       setAnswers((prev) => [...prev, transcription || "No answer"]);
       setScores((prev) => [...prev, response.data.score]);
-      setFeedback((prev) => [...prev, "Test feedback"]);
     } catch (error) {
       console.error("Error submitting answer:", error);
       toastError("Failed to submit answer. Please try again.");
@@ -268,12 +267,6 @@ const InterviewSimulation: React.FC = () => {
                     <div className="flex flex-col gap-2">
                       <p className="text-sm md:text-lg">
                         Your answer scored {currentScore} points.
-                      </p>
-                      <p className="text-sm md:text-xl font-bold mt-2">
-                        Feedback
-                      </p>
-                      <p className="text-sm md:text-lg">
-                        {currentFeedback || "No feedback available."}
                       </p>
                       <p className="text-sm md:text-xl font-bold mt-2">
                         Sample Answer

@@ -8,7 +8,8 @@ import {
   Menu,
   X,
   History,
-} from "lucide-react";
+  Star,
+} from "lucide-react"; // Added Star icon for recommendations
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,12 +25,16 @@ import {
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hasRecommendations, setHasRecommendations] = useState(false); // State to track recommendations
   const [user, fetchUser] = useUser();
   const location = useLocation();
-
   const navigate = useNavigate();
 
-  // useEffect(() => console.log(user), [user]);
+  useEffect(() => {
+    // Check if there are recommendations in localStorage
+    const recommendations = localStorage.getItem("recommendations");
+    setHasRecommendations(!!recommendations); // Set to true if recommendations exist
+  }, []);
 
   const handleLogout = async () => {
     const token = localStorage.getItem("token");
@@ -47,6 +52,7 @@ const Header: React.FC = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("questions");
         localStorage.removeItem("selectedJobTitle");
+        localStorage.removeItem("recommendations");
         fetchUser();
       }
     } catch (error) {
@@ -99,6 +105,18 @@ const Header: React.FC = () => {
             >
               Jobs
             </Link>
+            {hasRecommendations && (
+              <Link
+                to="/recommendations"
+                className={`hover:text-gray-700 ${
+                  location.pathname === "/recommendations"
+                    ? "font-bold text-primary-foreground"
+                    : "text-primary-foreground"
+                }`}
+              >
+                Recommendations
+              </Link>
+            )}
             <Link
               to="/interview"
               className={`hover:text-gray-700 ${
@@ -109,6 +127,7 @@ const Header: React.FC = () => {
             >
               Interview Simulation
             </Link>
+
             {!user && (
               <Button
                 onClick={() => navigate("/login")}
@@ -199,6 +218,21 @@ const Header: React.FC = () => {
               >
                 Interview Simulation
               </Link>
+
+              {hasRecommendations && (
+                <Link
+                  to="/recommendations"
+                  className={`flex items-center text-gray-900 hover:text-gray-700 hover:bg-gray-100 px-4 py-2 ${
+                    location.pathname === "/recommendations"
+                      ? "border-l-4 border-primary bg-gray-100"
+                      : ""
+                  }`}
+                >
+                  <Star className="inline mr-2 h-4 w-4" />
+                  Recommendations
+                </Link>
+              )}
+
               {user && (
                 <>
                   <Link
