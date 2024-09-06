@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { JobType } from "@/types/JobTypes";
 import useDebounce from "@/hooks/useDebounce";
 import JobCard from "./JobCard";
-import { Skeleton } from "./ui/skeleton";
 import JobSkeleton from "./JobSkeleton";
 
 interface JobListProps {

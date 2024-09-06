@@ -84,9 +84,23 @@ const JobPage: React.FC = () => {
     applyFilters();
   }, [filters, searchQuery]);
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <MainLayout>
       <div className="flex flex-col md:flex-row w-full border-t-2 border-mariner-300 md:h-screen">
+        {/* Search bar added */}
+        <div className="p-4">
+          <input
+            type="text"
+            placeholder="Search jobs..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="border p-2 rounded w-full"
+          />
+        </div>
         <JobFilter
           filters={filters}
           onFilterChange={handleFilterChange}

@@ -3,12 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "./config/settings";
 import { JobType } from "./types/JobTypes";
-import { useUser } from "./context/UserContext";
 import JobCard from "./components/JobCard";
 import JobSkeleton from "./components/JobSkeleton";
 
 const SavedJobs = () => {
-  const [user] = useUser();
   const [jobs, setJobs] = useState<JobType[] | null>([]);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -21,8 +19,11 @@ const SavedJobs = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        const jobs = response.data.map((job: any) => job.job);
+        const jobs: JobType[] = response.data.map(
+          (job: { job: JobType }) => job.job
+        );
         console.log(jobs);
+
         setJobs(jobs);
       } catch (error) {
         console.error("Error fetching data: ", error);

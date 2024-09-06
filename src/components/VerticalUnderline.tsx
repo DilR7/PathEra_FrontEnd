@@ -1,5 +1,3 @@
-import React from "react";
-
 const VerticalUnderline = () => {
   return (
     <div className="flex md:flex-col flex-row w-full md:w-auto">

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Checkbox } from "./components/ui/checkbox";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./context/UserContext";
 import { BASE_URL } from "./config/settings";
@@ -19,7 +19,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<LoginError>({});
   const navigate = useNavigate();
-  const [user, fetchUser] = useUser();
+  const [, fetchUser] = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,12 +34,18 @@ function Login() {
       );
       if (result.status === 200) {
         localStorage.setItem("token", result.data.token);
-        fetchUser();
+        fetchUser(); // Assuming fetchUser triggers a user fetch
         navigate("/");
       }
-    } catch (error: any) {
-      console.log(error.response.data);
-      setError(error.response.data.errors);
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const axiosError = err as AxiosError<{ errors: LoginError }>;
+        if (axiosError.response) {
+          setError(axiosError.response.data.errors);
+        }
+      } else {
+        console.error("An unexpected error occurred", err);
+      }
     }
   };
 
@@ -232,12 +238,6 @@ function Login() {
             <Button type="submit" className="w-full">
               Sign In
             </Button>
-            {/* <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-sky-600 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
-            >
-              Sign In
-            </button> */}
           </div>
         </form>
         <div className="pt-4">

@@ -24,8 +24,6 @@ const SpeechEngine = ({
   loadingTranscription,
   onReRecord,
   onFinalize,
-  startRecording,
-  resetRecording,
   loading,
   showScore,
 }: SpeechEngineProps) => (

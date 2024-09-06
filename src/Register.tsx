@@ -33,8 +33,12 @@ function Register() {
       if (result.status === 201) {
         navigate("/login");
       }
-    } catch (error: any) {
-      setError(error.response.data.errors);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(error.response.data.errors);
+      } else {
+        console.error("An unexpected error occurred", error);
+      }
     }
   };
 
