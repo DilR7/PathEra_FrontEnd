@@ -32,7 +32,8 @@ const JobCard: React.FC<JobCardProps> = ({ job, className = "" }) => {
               {job.job_title}
             </h2>
             <p className="text-gray-500 text-sm overflow-hidden whitespace-nowrap text-ellipsis">
-              {job.companyId.company_name} • {job.location.split(",")[0]}
+              {job.companyId.company_name}
+              {job.location ? ` • ${job.location.split(",")[0]}` : ""}
             </p>
           </div>
         </div>
