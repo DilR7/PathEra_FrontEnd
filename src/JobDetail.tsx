@@ -25,6 +25,7 @@ import { useUser } from "./context/UserContext";
 import { BASE_URL } from "./config/settings";
 import { RawSkillMatches, SkillMatchesType } from "./types/SkillType";
 import { AiFillCloseCircle } from "react-icons/ai";
+import LoadingIcon from "./components/LoadingIcon";
 
 const JobDetail: React.FC = () => {
   const { id } = useParams();
@@ -32,6 +33,7 @@ const JobDetail: React.FC = () => {
     return <div>Invalid Job ID</div>;
   }
   const [user] = useUser();
+  const [loading, setLoading] = useState(true);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
   const [jobDetails, setJobDetails] = useState<JobDetailType | null>(null);
@@ -44,11 +46,15 @@ const JobDetail: React.FC = () => {
 
   const fetchJobDetails = async () => {
     try {
-      const response = await axios.get(`https://pathera-backend.onrender.com/jobs/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      setLoading(true);
+      const response = await axios.get(
+        `https://pathera-backend.onrender.com/jobs/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setIsWishlisted(response.data.isSaved);
       setJobDetails(response.data);
       const storedSkills = localStorage.getItem("skill_matches");
@@ -73,6 +79,8 @@ const JobDetail: React.FC = () => {
       }
     } catch (error) {
       console.error("Failed to fetch job details:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,10 +141,20 @@ const JobDetail: React.FC = () => {
     );
   };
 
-  if (!jobDetails) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-20 z-50">
+          <LoadingIcon color="#0EA5E9" />
+        </div>
+      </MainLayout>
+    );
   }
 
+  if (!jobDetails) {
+    navigate("/jobs");
+    return null;
+  }
   return (
     <MainLayout>
       <div className="flex flex-grow flex-col md:flex-row bg-mariner-50 relative">
