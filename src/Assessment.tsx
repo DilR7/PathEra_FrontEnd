@@ -355,7 +355,7 @@ const Assessment: React.FC = () => {
                 <div className="flex flex-col items-center justify-center">
                   <LoadingIcon />
                   <div className="mt-4 text-lg">
-                    Hold on... This should take 2-3 minutes
+                    Hold on... This might take a while
                   </div>
                 </div>
               )}

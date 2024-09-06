@@ -25,7 +25,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, loading }) => {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for a job..."
+          placeholder="Search job..."
           className="w-full py-2 px-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-0 focus:border-gray-300"
         />
       </div>
