@@ -24,7 +24,7 @@ function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await axios.post(`http://localhost:5005/register`, {
+      const result = await axios.post(`https://pathera-backend.onrender.com/register`, {
         name: name,
         email: email,
         password: password,

@@ -44,7 +44,7 @@ const JobDetail: React.FC = () => {
 
   const fetchJobDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:5005/jobs/${id}`, {
+      const response = await axios.get(`https://pathera-backend.onrender.com/jobs/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
