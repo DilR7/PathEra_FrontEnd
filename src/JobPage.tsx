@@ -20,7 +20,7 @@ const JobPage: React.FC = () => {
   });
   const [allJobs, setAllJobs] = useState<JobType[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<JobType[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery,] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -84,9 +84,6 @@ const JobPage: React.FC = () => {
     applyFilters();
   }, [filters, searchQuery]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
 
   return (
     <MainLayout>
